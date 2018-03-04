@@ -103,10 +103,14 @@ Das folgende Kapitel betrachtet wie sogenannte ''Smart Contract''s dieses Proble
 \pdfcomment{Überlegungen wie man es nicht machen kann:Blockhash 100 mal hashen bringt nicht. Miner findet Hash und macht erst danach die Arbeit. Die 5 letzten Blockhashs mit einbeziehen bringt auch nichts, weil es dann nur auf den 5. letzten Block ankommt}
 
 \subsection{Blockchain Mining Varianz}
-
-\pdfcomment{Hier gibt es einen Vorschlag, wie man die erhoffte Blocktime öffters erreichen kann.
+Der Begriff Blockchain Mining Varianz beschreibt den Umstand, dass die Miner des Netzwerkes entweder Glück oder Pech bei der Suche nach dem nächsten gültigen Blockhash haben können. Bei Bitcoin gibt es daher nicht genau alle 10 Minuten einen neuen Block, sonder durchschnittlich alle 10 Minuten. Für die Glücksspielanwendung bedeutet dies, dass die Zeit zwischen der letzten Einzahlung und der Auswahl des Gewinners variieren kann. In der Praxis kommt es vor, dass man 30 Minuten und mehr auf den nächsten Block warten muss. Dies ist für den Spieler eine recht lange Zeit. Der Forscher XXX schlägt in dem Proposal namens Bobtail ein Verfahren vor, dass die Blockchain Mining Varianz stark verringert. Dieser Vorschlag ist bisher allerdings noch nicht in den Bitcoin Sourcecode eingeflossen.
+Eine andere Möglichkeit die Wartezeit für den Spieler zu verringern ist es eine  Kryptowährung mit einer geringeren Blockzeit zu verwenden. Beispiele hierfür sind LiteCoin\footnote{\url{https://litecoin.com/}} mit einer Blockzeit von 2,5 Minuten, die auf Privatsphäre spezialisierte Währung Monero\footnote{\url{https://getmonero.org/}} mit einer Blockzeit von 2 Minuten und Ethereum\footnote{\url{https://www.ethereum.org/}} mit einer Blockzeit von 12 Sekunden. Bei einer geringen Blockzeit kommt es häufiger zu sogenannten Blockchain Forks.
+TODO check
 Bobtail: A Proof-of-Work Target that Reduces Blockchain Mining Variance (Brian N. Levine)
-https://stanford2017.scalingbitcoin.org/presentations}
+https://stanford2017.scalingbitcoin.org/presentations
+
+\subsection{Blockchain Forks}
+Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain ketten sind nun gleich lang. Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist.
 
 \subsection{Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass sein Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und man somit eine höhere Transaktionsgebühr zahlen muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.

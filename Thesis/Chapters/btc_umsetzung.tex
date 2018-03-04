@@ -54,8 +54,8 @@ Abbildung \ref{fig:anwendung_aufbau} skizziert die Komponenten der Glücksspiela
 \begin{itemize}
 \item Server: Die Glücksspielanwendung läuft auf einem Server, der über eine Java Virtual Machine (JVM) Laufzeitumgebung verfügt, eine MySQL Datenbank und ein gewöhnliches Dateisystem besitzt.
 \item Java Virtual Machine (JVM): Innerhalb der JVM läuft ein sogenannter Application Server, der eine Webanwendung nach außen bereitstellt. Auf diese Webanwendung können die Spieler über das HTTP Protokoll mittels ihres Browsers zugreifen. Die Webanwendung besteht aus mehreren Komponenten.
-\item Application Server: Dieser stellt die Applikation bereit. Bei der Umsetzung der Glücksspielanwendung wurde der Open Source Application Server Wildfly\footnote{http://wildfly.org/} von Red Hat verwendet.
-\item GUI: Die Weboberfläche stellt die zentrale Schnittstelle zwischen der Anwendung und dem Spieler da. Diese ist mithilfe des Tapestry\footnote{http://tapestry.apache.org/} Webframeworks von Apache umgesetzt. Detaillierte Informationen findet man in \citep{tapestry}.
+\item Application Server: Dieser stellt die Applikation bereit. Bei der Umsetzung der Glücksspielanwendung wurde der Open Source Application Server Wildfly\footnote{\url{http://wildfly.org/}} von Red Hat verwendet.
+\item GUI: Die Weboberfläche stellt die zentrale Schnittstelle zwischen der Anwendung und dem Spieler da. Diese ist mithilfe des Tapestry\footnote{\url{http://tapestry.apache.org/}} Webframeworks von Apache umgesetzt. Detaillierte Informationen findet man in \citep{tapestry}.
 \item Geschäftslogik: Diese Behandelt sowohl die vom Benutzer über die GUI ausgelösten, als auch die vom Bitcoin Netzwerk ausgelösten Events.
 \item BitcoinJ: Die Java Bibliothek die zur Kommunikation mit dem Bitcoin Netzwerk verwendet wird.
 \end{itemize}
@@ -153,7 +153,7 @@ Die Graphische Oberfläche der Anwendung ist mit dem Tapestry Framework von Apac
 \caption{Leerer Topf}
 \label{fig:pot_open2}
 \end{figure}
-Abbildung \ref{fig:pot_open2} zeigt einen Topf mit 2 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 0,001 Bitcoin an die angezeigte Adresse senden. Der angezeigte QR-Code enthält genau diese Daten. Das \textbf{B}itcoin \textbf{I}mprovement \textbf{P}roposal Nummer 21\citep{bip21} legt fest, in welchem Format diese Daten kodiert werden müssen, damit beliebige Bitcoin Clients diese korrekt auslesen können. 
+Abbildung \ref{fig:pot_open2} zeigt einen Topf mit 2 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 0,001 Bitcoin an die angezeigte Adresse senden. Der angezeigte QR-Code erleichtert dem Spieler die Übertragung dieser Daten in das Überweisungsformular seines Smartphone Wallets. Das \textbf{B}itcoin \textbf{I}mprovement \textbf{P}roposal Nummer 21\citep{bip21} legt fest, in welchem Format diese Daten kodiert werden müssen, damit beliebige Bitcoin Clients diese korrekt auslesen können. 
 Folgende Daten sind in dem QR Code enthalten: ''bitcoin:mws1YS...Ae5?amount=0.01\&message=gambling''
 
 \begin{figure}[H]
@@ -163,7 +163,7 @@ Folgende Daten sind in dem QR Code enthalten: ''bitcoin:mws1YS...Ae5?amount=0.01
 \caption{Zahlung mit Smartphone}
 \label{fig:handy_send}
 \end{figure}
-Abbildung \ref{fig:handy_send} zeigt das Bitcoin CoPay Wallet\footnote{https://copay.io/}. Dieses erlaubt es Zahlungen an das Bitcoin Testnetz zu senden. Nachdem der Benutzer den QR-Code der Glücksspielanwendung mit seinem Smartphone abgescannt hat, erscheint sowohl der Betrag als auch die Empfangsadresse vor-ausgefüllt im Überweisungsformular. Die Wallet berechnet automatisch eine passende Transaktionsgebühr. Der Spieler prüft lediglich die Adresse und den Betrag und  autorisiert anschließend die Zahlung.
+Abbildung \ref{fig:handy_send} zeigt das Bitcoin CoPay Wallet\footnote{\url{https://copay.io/}}. Dieses erlaubt es Zahlungen an das Bitcoin Testnetz zu senden. Nachdem der Benutzer den QR-Code der Glücksspielanwendung mit seinem Smartphone abgescannt hat, erscheint sowohl der Betrag als auch die Empfangsadresse vor-ausgefüllt im Überweisungsformular. Die Wallet berechnet automatisch eine passende Transaktionsgebühr. Der Spieler prüft lediglich die Adresse und den Betrag und  autorisiert anschließend die Zahlung.
 
 \begin{figure}[H]
 \centering
@@ -172,7 +172,7 @@ Abbildung \ref{fig:handy_send} zeigt das Bitcoin CoPay Wallet\footnote{https://c
 \caption{Topf geschlossen}
 \label{fig:pot_closed}
 \end{figure}
-Nachdem die Zahlung von der Glücksspielanwendung erkannt wurde und ein weiterer Spieler in den Topf eingezahlt hat, ist der Topf voll. Nun wartet die Anwendung auf den Payout Block, der den Gewinner des Topfs festlegt. Da der Blockhash noch noch nicht feststeht, zeigt die Anwendung die Animation eines sich sehr schnell wechselnden Block Hash mit mehreren Fragezeichen an. Dies ist in Abbildung \ref{fig:pot_closed} zu sehen.
+Nachdem die Zahlung von der Glücksspielanwendung erkannt wurde und ein weiterer Spieler in den Topf eingezahlt hat, ist der Topf voll. Nun wartet die Anwendung auf den Payout Block, der den Gewinner des Topfs festlegt. Da der Blockhash noch nicht feststeht, zeigt die Anwendung die Animation eines sich sehr schnell wechselnden Block Hash, der mehrere Fragezeichen enthält, an. Dies ist in Abbildung \ref{fig:pot_closed} zu sehen.
 
 \begin{figure}[H]
 \centering
@@ -191,4 +191,4 @@ Sobald der entscheidende Block empfangen wird, wird der voraussichtliche Gewinne
 \label{fig:pot_settled}
 \end{figure}
 
-Klickt der Benutzer auf den \emph{Payout triggered} Link, gelangt er zu einem Blockexplorer. Dieser zeigt ihm die Transaktionsdetails an.
+Klickt der Benutzer auf den \emph{Payout triggered} Link, gelangt er zu einem Blockexplorer. Dieser zeigt ihm die Transaktionsdetails an. 
