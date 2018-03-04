@@ -1,0 +1,108 @@
+//https://ethereum.github.io/browser-solidity
+//"0x26588a9301b0428d95e6fc3a5024fce8bec12d51"
+// problematisch ist, dass mal laut doku nur auf die 256 letzten blockhashs zugreigen kann (https://solidity.readthedocs.io/en/develop/units-and-global-variables.html)
+// mit einer blockzeit von 17s egibt sich somit 256*17 / 60 = 72,53 minuten in denen die checkPayout funktion aufgerufen werden muss
+
+//Cyberdice: peer-to-peer gambling in the presence of cheaters (Frank Stajano and Richard Clayton)
+pragma solidity ^0.4.0;
+contract TrustlessGamble {
+   
+	enum PotState { OPEN, CLOSED, FINISHED } 
+    uint8 constant PAYOUT_BLOCK_OFFSET =2;
+    uint constant EXPECTED_POT_AMOUNT=1000000000000000000;// 1 ETH in wei
+    
+    uint8 expectedNbrOfParticipants;
+    uint8 public nbrOfParticipants;
+    Pot public currentPot;
+    Pot[] closedPots;
+
+    //debug variables 
+    string public _message;
+    uint public _lastDeposit;
+    uint public _lastPayoutBlockhashDigit;
+    
+    struct Participant {
+        address payout;
+        uint receivedAmount;
+    }
+    
+    struct Pot {
+        Participant[2] participants;
+        uint closingBlockNumber;
+        uint payoutBlockNumber;
+        bytes32 payoutBlockHash;
+        PotState state;
+        address winner;
+    }
+
+    address contractOwner;
+
+    function TrustlessGamble(/*uint8 _expectedNbrOfParticipants*/) public {
+        contractOwner = msg.sender;
+        expectedNbrOfParticipants = 2; //_expectedNbrOfParticipants;
+        //currentPot.participants.length = _expectedNbrOfParticipants; //nicht sicher ob das so funktioniert
+        nbrOfParticipants = 0;
+    }
+    
+    // Events allow light clients to react on
+    // changes efficiently.
+    event Deposit(address from, address to, uint amount);
+
+    function deposit(address _payout) payable public {
+        assert(msg.value == EXPECTED_POT_AMOUNT);
+        _lastDeposit = msg.value;
+        //currentPot.participants[nbrOfParticipants].payout= _payout;
+        currentPot.participants[nbrOfParticipants] = Participant(_payout,msg.value);//TODO
+        nbrOfParticipants++;
+        Deposit(msg.sender, _payout, msg.value);
+        if (nbrOfParticipants == expectedNbrOfParticipants){
+            currentPot.closingBlockNumber = block.number;
+            currentPot.payoutBlockNumber = currentPot.closingBlockNumber + PAYOUT_BLOCK_OFFSET;
+            currentPot.state = PotState.CLOSED;
+            //closedPots[0] = currentPot;
+            //delete currentPot;
+            //currentPot.state = PotState.OPEN;
+            nbrOfParticipants=0;
+        }
+    }
+    
+    function checkPayout()public{
+        Pot payoutPot = currentPot;
+        if(payoutPot.state ==PotState.CLOSED){
+            if(block.number==payoutPot.payoutBlockNumber){
+                _message = "payout block was mined. Payout will be triggered with the next block";
+            }
+            if(block.number>payoutPot.payoutBlockNumber){
+                _message = "trigger payout";
+                payoutPot.payoutBlockHash = block.blockhash(payoutPot.payoutBlockNumber);
+                if(payoutPot.payoutBlockHash == 0){
+                     _message = "can not payout because checkPayout-function was triggered too late";
+                }
+                payoutPot.winner = payoutPot.participants[0].payout; //TODO select winner by blockhash
+                _lastPayoutBlockhashDigit = uint(payoutPot.payoutBlockHash[31]);
+            }
+            if(block.number<payoutPot.payoutBlockNumber){
+                uint diff = payoutPot.payoutBlockNumber - block.number;
+                _message = bytes32ToString(bytes32(diff));
+            }
+        }else{
+            _message ="pot 0 not closed yet";
+        }
+    }
+    
+    
+    // ###################
+    // # helper methodes #
+    // ###################
+    function bytes32ToString (bytes32 data) returns (string) {
+        bytes memory bytesString = new bytes(32);
+        for (uint j=0; j<32; j++) {
+            byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+            if (char != 0) {
+                bytesString[j] = char;
+            }
+        }
+        return string(bytesString);
+}
+
+}

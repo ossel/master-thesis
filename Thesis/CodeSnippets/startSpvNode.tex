@@ -1,0 +1,22 @@
+\begin{lstlisting}
+@PostConstruct
+private void startSvpNode() {
+    log.info("#### Start Bitcoin SPV Node  ####");
+    currentPot = new Pot(getCryptoNetwork().getCryptoCurrency(), 2, EXPECTED_BETTING_AMOUNT);
+    log.info("Bitcoin wallet directory = " + CoreUtil.getWalletDirectory().getAbsolutePath());
+    bitcoinAppKit = new WalletAppKit(getNetworkParams(), CoreUtil.getWalletDirectory(),
+            WALLET_FILE_NAME) {
+        @Override
+        protected void onSetupCompleted() {
+            log.info("#### Bitcoin SPV Node [" + bitcoinAppKit.state() + "] ####");
+        }
+    };
+    bitcoinAppKit.startAsync();
+    log.info("Bitcoin appkit started.");
+    newBlockListener = new NewBlockListener(this);
+    bitcoinAppKit.chain().addNewBestBlockListener(newBlockListener);
+    coinReceivedListener = new CoinsReceivedListener(this);
+    bitcoinAppKit.wallet().addCoinsReceivedEventListener(coinReceivedListener);
+}
+\end{lstlisting}
+

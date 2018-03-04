@@ -1,0 +1,34 @@
+\begin{lstlisting}
+@Override
+public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+    log.info("New Block height = " + block.getHeight() + " hash = "
+            + block.getHeader().getHash().toString());
+    List<Pot> unfinishedPots = getUnfinishedPots(service.getClosedPots());
+    for (Pot pot : unfinishedPots) {
+        long potId = pot.getCreateTime().getTime();
+        if (pot.getPayoutBlockHeight() > block.getHeight()) {
+            log.info("Pot[" + potId + "] can not be finished yet. Waiting for "
+                    + (pot.getPayoutBlockHeight() - block.getHeight()) + " more blocks.");
+        } else if (block.getHeight() == pot.getPayoutBlockHeight()) {
+            log.info("Pot[" + potId + "] select temorary Winner.");
+            Block tmpPayoutBlock = new ExtendedBlock(block.getHeader().getHash().toString());
+            pot.setPayoutBlock(tmpPayoutBlock);
+            selectWinner(pot, tmpPayoutBlock);
+        } else {
+            log.info("Pot[" + potId + "] select final winner.");
+            try {
+               StoredBlock correctBlock = getPastBlock(pot.getPayoutBlockHeight(), block);
+               Block finalPayoutBlock =
+                       new ExtendedBlock(correctBlock.getHeader().getHash().toString());
+               pot.setPayoutBlock(finalPayoutBlock);
+               Participant winner = selectWinner(pot, finalPayoutBlock);
+               log.info(winner.getDepositAddress() + " wins pot[" + potId + "].");
+               startPayoutThread(pot);
+            } catch (BlockStoreException e) {
+               log.info("Couldn't select final winner of Pot[" + potId + "]:" + e.getMessage(), e);
+            }
+        }
+    }
+}
+\end{lstlisting}
+

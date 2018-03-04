@@ -1,0 +1,20 @@
+\begin{lstlisting}
+function payout() public{
+    assert(potClosed);
+    assert(block.number>payoutBlockNumber);
+    potClosed = false; //fixes bug
+    payoutBlockHash = block.blockhash(payoutBlockNumber); 
+    if(payoutBlockHash == 0){
+        nbrOfMissedPayouts++;
+    }else{
+        winner = uint(payoutBlockHash) % NBR_OF_SLOTS;
+        address winnerAddress = payoutAddresses[winner];
+        uint amount= EXPECTED_POT_AMOUNT*NBR_OF_SLOTS;
+        amount += EXPECTED_POT_AMOUNT*NBR_OF_SLOTS*nbrOfMissedPayouts;
+        winnerAddress.transfer(amount); // send pot amount to winner
+        nbrOfMissedPayouts = 0;
+    }
+    nbrOfParticipants=0;
+}
+\end{lstlisting}
+

@@ -1,0 +1,291 @@
+<Project>
+  <Name>Masterarbeit</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Datenmodell</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Pot</Name>
+        <Access>Public</Access>
+        <Location left="84" top="95" />
+        <Size width="208" height="264" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int nbrOfParticipants</Member>
+        <Member type="Field">Date closingTime</Member>
+        <Member type="Field">int closingHeight</Member>
+        <Member type="Field">String closingHash</Member>
+        <Member type="Field">int payoutHeight</Member>
+        <Member type="Field">String payoutHash</Member>
+        <Member type="Field">int winnerIndex</Member>
+        <Member type="Field">String payoutTxnId</Member>
+        <Member type="Field">Exception payoutError</Member>
+        <Member type="Method">public List&lt;Participant&gt; getParticipants()</Member>
+        <Member type="Method">public void addParticipant()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Participant</Name>
+        <Access>Public</Access>
+        <Location left="413" top="113" />
+        <Size width="177" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">String depositAddress</Member>
+        <Member type="Field">String pseudonym</Member>
+        <Member type="Field">String payoutAddress</Member>
+        <Member type="Field">int receivedAmount</Member>
+        <Member type="Method">public void setPseudonym()</Member>
+        <Member type="Method">public void setPayoutAddress()</Member>
+        <Member type="Method">public void setReceivedAmount()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="0" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>317</X>
+          <Y>220</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>388</X>
+          <Y>220</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Business Logic</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Comment">
+        <Text>Core Module</Text>
+        <Location left="33" top="331" />
+        <Size width="299" height="448" />
+      </Entity>
+      <Entity type="Enum">
+        <Name>CryptoNetwork</Name>
+        <Access>Public</Access>
+        <Location left="134" top="568" />
+        <Size width="162" height="146" />
+        <Collapsed>False</Collapsed>
+        <Value>BTC_TEST</Value>
+        <Value>BTC_MAIN</Value>
+        <Value>ETH_MAIN</Value>
+        <Value>ETH_RINKEBY</Value>
+        <Value>ETH_ROPSTEN</Value>
+      </Entity>
+      <Entity type="Interface">
+        <Name>CryptoNetworkService</Name>
+        <Access>Public</Access>
+        <Location left="56" top="369" />
+        <Size width="245" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public String getCurrentBlockHash()</Member>
+        <Member type="Method">public int getCurrentBlockHeight()</Member>
+        <Member type="Method">public String getDepositAddress()</Member>
+        <Member type="Method">public Pot getCurrentPot()</Member>
+        <Member type="Method">public List&lt;Pot&gt; getClosedPots()</Member>
+        <Member type="Method">public String getSmartContractABI()</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Ethereum Module</Text>
+        <Location left="348" top="331" />
+        <Size width="723" height="448" />
+      </Entity>
+      <Entity type="Class">
+        <Name>BtcRopstenEjb</Name>
+        <Access>Public</Access>
+        <Location left="592" top="716" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>BtcRinkebyEjb</Name>
+        <Access>Public</Access>
+        <Location left="783" top="716" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EthMainEjb</Name>
+        <Access>Public</Access>
+        <Location left="398" top="716" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentBlockHeight</Name>
+        <Access>Public</Access>
+        <Location left="668" top="369" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentPot</Name>
+        <Access>Public</Access>
+        <Location left="668" top="514" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GasPrice</Name>
+        <Access>Public</Access>
+        <Location left="668" top="594" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentBlockHash</Name>
+        <Access>Public</Access>
+        <Location left="668" top="438" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AbstractEthereumService</Name>
+        <Access>Public</Access>
+        <Location left="369" top="369" />
+        <Size width="236" height="240" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private List&lt;Pot&gt; closedPots</Member>
+        <Member type="Method">public abstract Web3j getWeb3jService()</Member>
+        <Member type="Method">public abstract CryptoNetwork getCryptoNetwork()</Member>
+        <Member type="Method">private void initialize()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ExpiryCacheValue</Name>
+        <Access>Public</Access>
+        <Location left="887" top="414" />
+        <Size width="162" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Web3j web3j</Member>
+        <Member type="Field">private Credentials credentials</Member>
+        <Member type="Field">private long lastRefreshTIme</Member>
+        <Member type="Field">private long threshold</Member>
+        <Member type="Method">public void refresh()</Member>
+        <Member type="Method">public Object getValue()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="6" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>481</X>
+          <Y>642</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>874</X>
+          <Y>691</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>481</X>
+          <Y>662</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>676</X>
+          <Y>691</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>481</X>
+          <Y>662</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="8" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>642</X>
+          <Y>498</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>642</X>
+          <Y>391</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="8" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>748</X>
+          <Y>584</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="11" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="11" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="11" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="10" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>862</X>
+          <Y>503</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>862</X>
+          <Y>503</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="11" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>335</X>
+          <Y>400</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

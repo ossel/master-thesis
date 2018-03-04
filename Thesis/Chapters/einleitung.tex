@@ -1,0 +1,83 @@
+% Chapter 1
+
+\chapter{Einleitung} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+Die Erfindung der Kryptowährung Bitcoin und deren inhärente Blockchain-Technologie hat in den letzten Jahren einen regelrechten Hype ausgelöst. Begriffe wie Blockchain, Smart Contracts und Dezentralität sind in aller Munde. 
+
+Ziel dieser Masterarbeit ist es den Einsatz dieser neuartigen Technologie an der beispielhaften Realisierung einer Glücksspielanwendung zu demonstrieren. Der Einsatz einer Blockchain soll dabei das Vertrauen, dass der Endnutzer der Anwendung entgegenbringen muss, auf ein Minimum reduzieren.
+
+\section{Motivation}
+
+\pdfcomment{Hier erst allgemein auf die Probleme eingehen, die man mit blockchain technologie lösen kann. Erstspäter auf Gambling und das Beispiel von Pokerstars eingehen.}
+
+Herkömmliche Glücksspielanwendungen im Internet werden in der Regel von einer zentralen Organisation angeboten. Die Organisation muss sich den länderspezifischen Regeln und Gesetzen unterwerfen und kann daher nur in einem gewissen, vorgegebenen Rahmen operieren. Diese Regeln und Gesetze dienen einerseits dazu die Interessen des Staates zu wahren und andererseits den Endnutzer zu schützen. 
+%Durch die zentrale Organisation wird der Spieler zwar gegen betrügende Mitspieler geschützt aber wer schützt den Spieler vor einer betrügerischen zentralen Organisation?
+
+Das Internet bietet zahlreiche Möglichkeiten des Glücksspiel an. Eine davon ist Online-Poker. Die Internetseite Pokerstars \cite{pokerstars} bietet beispielsweise eine Plattform auf der man im Internet gegen andere Teilnehmer Poker spielen kann. Dabei muss der Spieler dem Service von Pokerstars vertrauen, dass dieser die Karten fair verteilt und keinen der Teilnehmer bevorzugt. Der Spieler hat keine Möglichkeit nachzuprüfen ob der Algorithmus, der den Spielern die Karten zuteilt, auch wirklich fair ist. Der Spieler muss der zentrale Organisation somit ein gewisses Maß an Vertrauen entgegenbringen. 
+
+
+%Der Endnutzer wird somit durch Transparenz und nicht durch staatliche Regulierungen geschützt. 
+
+
+
+% Hier ein paar unwissenschaftliche Gründe warum 
+%Als Spieler muss man sich erst registrieren und seine Bankdaten angeben. Durch diese Registrierung gibt der Spieler seine Anonymität auf. Außerdem hat der Staat eine zentrale Stelle an die er sich wenden kann um Steuereinnahmen durch die Besteuerung von Glücksspiel zu generieren. Ein weiterer Punkt der bei derzeitig etablierten Glücksspielplattformen verbesserungswürdig ist, sind Ein- und Auszahlungen. Einzahlungen und Auszahlungen  per Banküberweisungen dauern mindestens einen Tag. Dadurch muss der Glücksspieler eine lange Zeit warten bevor er den Service nutzen kann. Auch potentielle Gewinne kann er erst nach solch einer langen Zeitdauer weiterverwenden. Heutzutage gibt es zwar Dienste wie PayPal, die schnelle Zahlungen realisieren, allerdings kostet die Integration solch eines Zahlungsmittels recht hohe Gebühren für die Glücksspielplattform. Cryptowährungen bieten in dieser Hinsicht Abhilfe, da Transaktionen innerhalb wenigen Minuten bestätigt werden. Der Glücksspieler kann beispielsweise in einem Crypto-Casino spielen und sich anschließend von seinen Gewinnen eine Pizza bei Lieferando kaufen. :) (Hier nochmal drüber nachdenken ob man die Argumente nicht wissenschaftlicher verpacken könnte)
+
+
+%----------------------------------------------------------------------------------------
+
+\section{Projektidee}
+
+Die in dieser Masterarbeit betrachtete Glücksspielanwendung soll ein Spiel anbieten, bei dem N Teilnehmer in einen Geldtopf einzahlen und auf ein zufälliges Event wetten. Jeder der Teilnehmer soll dabei die gleichen Gewinnchancen haben. Sobald alle Teilnehmer eingezahlt haben, wird einer der N Teilnehmer zufällig ausgewählt und gewinnt den gesamten Geldtopf. Der Gewinner bekommt somit seinen eigenen Einsatz als auch den Einsatz aller Mitspieler ausgezahlt. Die restlichen Teilnehmer verlieren und gehen leer aus.
+
+Die erstmalig in Bitcoin verwendete Blockchain Technologie ist für die Entwicklung einer solchen Anwendung bestens geeignet, da sie transparente, pseudonyme Zahlungen ermöglicht. Außerdem lässt sich der für die Gewinnerauswahl benötigte Zufall durch ein in der Zukunft liegenden Zustand der Blockchain abbilden. 
+Der Zufallsfaktor kommt somit direkt von der Blockchain und daher von außerhalb der Glücksspielanwendung.
+
+Die genauere Erklärung der Projektidee erfordert einiges Grundwissen im Bereich der Blockchain-Technologie. Das folgende Kapitel klärt daher einige grundlegende Begriffe.
+
+%Was genau das eigentliche Spiel für den Nutzer der Glücksspielanwendung ist, ist für diese Masterarbeit zweitrangig. Ziel dieser Masterarbeit ist es zu erforschen, welche Möglichkeiten die erstmals in Bitcoin verwendete Blockchain Technologie bietet und in wie weit durch sie das Vertrauen des Endnutzers in die Anwendung reduziert werden kann.
+
+
+\section{Anforderungen}
+Die Glücksspielanwendung muss den folgenden Anforderungen gerecht werden:
+\begin{itemize}
+\item Die Einzahlung jedes Endnutzers ist für jeden anderen Endnutzer nachprüfbar.
+\item Die Auswahl des Gewinners ist von einem zufälligen Faktor abhängig, auf den weder die Anwendung noch die Endnutzer einen Einfluss haben.
+\item Jeder Endnutzer kann die Echtheit des zufälligen Faktors eigenständig nachprüfen.
+\item Die Auszahlung an den Gewinner ist transparent und kann somit für jeden Endnutzer nachgeprüft werden.
+\item Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt.
+\end{itemize}
+
+
+\section{Vorhandenes}
+
+\subsection{Cyberdice Protokoll}
+
+Einen ersten Ansatz wie man im Internet Glücksspiel ohne eine vertrauenswürdige Drittpartei betreiben kann, liefert \cite{cyberdice_paper}. Es stellt ein Kommunikationsprotokoll vor, das mit Hilfe kryptographischer Methoden sicherstellt, dass weder die Teilnehmer noch Außenstehende betrügen können. Das zum Glücksspiel verwendete Protokoll funktioniert aber nur unter der Annahme, dass es eine zentrale Institution (Bank) gibt, bei der die Teilnehmer Geld einzahlen und im Falle eines Gewinns gegen die Vorlage eines Beweises Geld ausgezahlt bekommen.
+\space
+Durch die Erfindung dezentraler Kryptowährungen, die auf einer für jeden einsehbaren Blockchain basieren, fällt diese vorher noch benötigte zentrale Institution weg.
+
+%Durch die Erfindung dezentraler, Ländergrenzen überschreitender Krypto-Währungssysteme ist es möglich geworden den Einfluss des Staates zu umgehen und den Endnutzer durch die Transparenz der Glücksspielanwendung zu schützen.
+
+\subsection{Glücksspielseiten}
+
+\pdfcomment{Hier muss ich noch prüfen in wie weit diese Services bereits die Anforderungen erfüllen.}
+
+Es gibt bereits Services die dezentrales, transparentes Glücksspiel mit Hilfe von Kryptowährungen umsetzen.
+
+Die Internetseite Crypto Games \cite{crypto_games} bietet Würfelspiele, Blackjack, Roulette, Online Poker und Lotto an. Der Nutzer hat dabei die Möglichkeit mit der Kryptowährung seiner Wahl zu bezahlen. Für die Gewinnerauswahl bezieht diese Seite einen Zufallsfaktor von der Bitcoin Blockchain ein, sodass der Benutzer dem Online Casino nicht vertrauen muss.
+Eine genaue Beschreibung des verwendeten Verfahren befindet sich am Ende dieser Ausarbeitung.
+
+Die Internetseite \cite{vdice} bietet Spiele, die durch Smart Contracts auf der Ethereum Plattform umgesetzt sind, an.

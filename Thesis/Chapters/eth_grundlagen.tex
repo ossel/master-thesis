@@ -1,0 +1,51 @@
+\chapter{Zweiter Ansatz: Ethereum} % Main chapter title
+
+\label{eth} % For referencing the chapter elsewhere, use \ref{eth} 
+
+\section{Grundlagen}
+\iffalse
+    Smart Contract erlaubt zu 100% sichere Auszahlung, da diese nicht von der Anwendung, sondern vom Netzwerk selbst übernommen wird.
+    Man kann nicht so leicht gegen eine Bank spielen, weil die Bank in diesem Fall wirklich selber Gebühren zahlen muss. (Bei DASH reserviert die Bank nur Geld falls sie in einen Pot einzahlt und schreibt keine Transaktionen auf die Blockchain)
+    Gibt es SPV Clients für Ethereum? Soweit ich weiß sind alleine die Header Daten der Blöcke > 2GB. Daher sollte es keine SPV mobile Wallets geben. Somit ist die Usability die solch eine Anwendung erfordert eher nicht gegeben.
+    Ich bin nicht ganz sicher ob man von Ethereum raus auf den Blockhash xy zugreifen kann. Sollte dies nicht der Fall sein müsste man einem Oracle vertrauen, was das Smart Contract Argument abschwächt.
+    
+Nachteil: Man kann aus dem Ethereum System nicht auf den Bitcoin Blockhash zugreifen. Somit kann man die Beiden nicht zur erhöhten Manipulationssicherheit kombinieren.
+\vspace{2cm}
+
+Ethereum ist genau wie Bitcoin ein Peer-to-Peer Netzwerk, dass auf einer öffentlichen Blockchain basiert. Es handelt sich im Gegensatz zu Bitcoin um eine generalisierte Blockchain die nicht nur Finanztransaktionen speichern kann, sondern Smart Contracts. Ethereum sieht sich als eine Open Source Plattform, die es ermöglicht dezentrale Applikationen zu entwickeln und auf sie zuzugreifen. Genau wie das Bitcoin Netzwerk umfasst das Ethereum Netzwerk weltweit hunderttausende Computer. All diese Computer stellen die Unverfälschbarkeit der Aktionen der Smart Contracts und somit der dezentralen Anwendung sicher.
+
+Nun folgen einige Komponenten die die Ethereum Plattform bereitstellt.
+\subsection{Contracts}
+Ethereum ermöglicht es Geschäftsprozesse in Form von Contracts zu programmieren. Contracts werden von dem Netzwerk ausgeführt. Ein Contract ist ein Programm bestehend aus einer Reihe von Anweisungen, die ausgeführt werden, sobald das Programm eine Mittteilung in Form einer Transaktion erhält. Contracts haben die Möglichkeit Daten aus der Blockchain auszulesen und auf ihr Daten zu speichern. Außerdem können sie Transaktionen senden und empfangen. Somit können Contracts sowohl von Menschen als auch von anderen Contracts ausgelöst werden. Contracts können daher mit anderen Contracts über die vom Programmierer festgelegte Schnittstelle interagieren. Es existieren mehrere Höhere Programmiersprachen, die es erlauben in ihnen Contracts zu schreiben. Der Quellcode wird so kompiliert, dass er von jedem Netzwerkknoten in der Ethereum Virtual Machine ausgeführt werden kann.
+\subsection{Ethereum Accounts}
+Um Ethereum nutzen zu können braucht man einen Account. Ethereum Accounts haben:\\
+\begin{itemize}
+\item Eine 20 Byte lange Adresse,
+\item Einen Kontostand in Ether,
+\item Contract Code der durch den Account verwaltet wird,
+\item Speicherplatz,
+\end{itemize} In Ethereum gibt es 2 Arten von Accounts. Die erste Art ist eine Adresse die durch den Besitzer des privaten Schlüssels kontrolliert wird. Diese Art von Account ist vergleichbar mit einer Bitcoin Adresse, die man durch eine Bitcoin-Wallet kontrolliert. Die zweite Art ist ein Contract Account, der durch den Contract Code kontrolliert wird. Der Contract Code verwaltet eigenständig den Kontostand des Accounts und verhält sich genauso wie der Programmierer es festgelegt hat.
+\subsection{Transaktionen}
+Interaktionen mit dem Ethereum Netzwerk finden in Form von sogenannten Transaktionen statt. Transaktionen beinhalten:
+\begin{itemize}
+\item eine Empfangsadresse.
+\item eine Anzahl an Ether die versandt wird.
+\item Daten (Bytes), die vom Contract ausgelesen werden können.
+\end{itemize}
+
+Es gibt zwei verschiedene Arten von Transaktion. Sie unterscheiden sich durch die in der Transaktion angegebene Empfangsadresse. 
+Wird die Empfangsadresse durch einen privaten Schlüssel kontrolliert, handelt es sich lediglich um eine Finanztransaktion, die Ether vom Sender zum Empfänger Account transferiert. Anderenfalls handelt es sich um eine Transaktion, die den Contract Codeder Empfangsadresse ausführt. Welche Funktion ausgeführt werden soll, wird vom Sender im Datenfeld der Transaktion kodiert. Jeder Netzwerkknoten arbeitet jede einzelne Transaktion auf der Blockchain ab und speichert den gesamten resultierenden Status. 
+\subsection{Ethereum Virtual Machine}
+In ihr wird der Code der Contracts ausgeführt. Sie arbeitet die Anweisungen des Contracts der Reihe nach ab und bricht ab, falls in der Transaktion nicht genügend Ether für die Ausführung des Codes bezahlt wurden.
+\subsection{Ether}. 
+Ist die Kryptowährung des Ethereum Netzwerks. Sie wird benutzt um für Transaktionsgebühren und die Ausführung von Contract Code zu bezahlen. Ether entsteht ähnlich wie bei Bitcoin durch Mining.
+\subsection{Ethereum Client}. 
+Einen Ethereum Client wird benötigt. um am Netzwerk teilnehmen zu können. Vor der Verwendung muss dieser sich erst mit dem Netzwerk synchronisieren. Bei der Synchronisation werden die neuen Transaktionen heruntergeladen und überprüft. Weit verbreitete Ethereum Clients sind Ethereum Wallet und Mist.
+
+Teile der vorgestellten Komponenten wurden stark vereinfacht dargestellt. Eine genauere Ausführung kann man im Whitepaper zu Ethereum finden. 
+Weitere Informationen findet man unter der Webseite https://www.ethereum.org/. Dort findet man alle erforderlichen Komponenten um mit dem Ethereum Netzwerk zu interagieren oder eine eigene dezentrale Anwendung zu schreiben. 
+
+\subsection{Light Client Protokoll}. 
+Dies ist ein noch in der Entwicklung befindliches Protokoll, dass es Benutzern mit leistungsschwachen Endgeräten wie beispielsweise Smartphones erlaubt am Netzwerk teilzunehmen. Dieses Protokoll erlaubt es Geräten nur die für sie relevanten Statusinformationen zu empfangen und dabei trotzdem zu einem gewissen Grad deren Korrektheit verifizieren zu können.
+
+\fi

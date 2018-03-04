@@ -1,0 +1,18 @@
+\begin{lstlisting}
+function deposit() payable public {
+    deposit(msg.sender);
+}
+function deposit(address _payout) payable public {
+    assert(msg.value == EXPECTED_POT_AMOUNT);
+    assert(!potClosed);
+    depositAddresses[nbrOfParticipants] = msg.sender;
+    payoutAddresses[nbrOfParticipants] = _payout;
+    nbrOfParticipants++;
+    if (nbrOfParticipants == NBR_OF_SLOTS){
+        closingBlockNumber = block.number;
+        payoutBlockNumber = closingBlockNumber + PAYOUT_BLOCK_OFFSET;
+        potClosed = true;
+    }
+}
+\end{lstlisting}
+

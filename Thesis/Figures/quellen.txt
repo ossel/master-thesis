@@ -1,0 +1,3 @@
+ming_farm	https://www.odt.co.nz/sites/default/files/styles/odt_story_slideshow/public/slideshow/node-389965/2016/07/bitcoin_mining_computers_are_pictured_in_bitmain_s_57830be267.jpg?itok=8CRP1Osb
+btc_core_full_node_architecture https://i0.wp.com/barcode.wsecofarm.com/wp-content/uploads/2017/09/Figure-3-1.-Bitcoin-Core-architecture-Source-Eric-Lombrozo.png?resize=768%2C720
+p2p_networks https://www.gigatribe.com/images/p2p-networks.jpg

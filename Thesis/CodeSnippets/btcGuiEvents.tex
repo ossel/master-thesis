@@ -1,0 +1,15 @@
+\begin{lstlisting}
+public Pot getCurrentPot() {
+    return currentPot.clone();
+}
+public String getDepositAddress() {
+    return bitcoinAppKit.wallet().freshAddress(KeyPurpose.RECEIVE_FUNDS).toString();
+}
+public String getCurrentBlockHash() {
+    return bitcoinAppKit.chain().getChainHead().getHeader().getHash().toString();
+}
+public int getCurrentBlockHeight() {
+    return bitcoinAppKit.chain().getChainHead().getHeight();
+}
+\end{lstlisting}
+

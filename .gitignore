@@ -3,6 +3,8 @@
 *.log
 */main.pdf
 */main.lof
+*/main.lot
+*/main.blg
 */main.synctex.gz
 */main.out
 */main.run.xml

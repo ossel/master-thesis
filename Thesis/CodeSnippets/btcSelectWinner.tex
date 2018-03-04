@@ -1,0 +1,24 @@
+\begin{lstlisting}
+public class ExtendedBlock extends Block {
+
+    private String prefix;
+    private String suffix;
+
+    public ExtendedBlock(String blockHash) {
+        super(blockHash, -1);
+        int position = blockHash.length() - 1;
+        while (position > 0) {
+            char c = blockHash.charAt(position);
+            int value = (int) c;
+            if (value >= 48 && value <= 57) {// numeric
+                this.lastDigit = Integer.parseInt(String.valueOf(c));
+                break;
+            }
+            position--;
+        }
+        this.prefix = blockHash.substring(0, position);
+        this.suffix = blockHash.substring(position + 1, blockHash.length());
+    }
+}
+\end{lstlisting}
+
