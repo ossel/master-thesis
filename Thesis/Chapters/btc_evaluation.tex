@@ -23,7 +23,7 @@ Die Auszahlung an den Gewinner muss transparent und somit für jeden Endnutzer n
 Genau wie die Einzahlungen ist auch die Auszahlung für jeden Spieler mithilfe eines Blockchain-Explorers oder eines Bitcoin Full Nodes möglich. Jeder Teilnehmer kann somit für alle bereits abgeschlossenen Spiele nachprüfen ob die Anwendung sich korrekt verhalten und eine Auszahlung getätigt hat. 
 \subsubsection{Fairheit des Spiels}
 Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt.\\\\
-Die Zuordnung der Spieler auf die Gewinnzahlen ist durch die Reihenfolge der Transaktionen in der Blockchain festgeschrieben. Eine nachträgliche Veränderung dieser Reihenfolge ist weder durch die Nutzer, noch durch die Glücksspielanwendung möglich.\footnote{Eine Veränderung der Reihenfolge ist nur durch einen sogenannten Blockchain-Fork möglich. Kapitel \ref{Chapter6} erörtert welche Auswirkungen dies auf die Glücksspielanwendung hat.}
+Die Zuordnung der Spieler auf die Gewinnzahlen ist durch die Reihenfolge der Transaktionen in der Blockchain festgeschrieben. Eine nachträgliche Veränderung dieser Reihenfolge ist weder durch die Nutzer, noch durch die Glücksspielanwendung möglich.\footnote{Eine Veränderung der Reihenfolge ist nur durch einen sogenannten Blockchain-Fork möglich. Kapitel \ref{sssec:btc_fork} erörtert welche Auswirkungen dies auf die Glücksspielanwendung hat.}
 
 Damit keiner der Spieler einen Vorteil hat, muss jeder Topf-Platz die gleiche Gewinnwahrscheinlichkeit haben.
 Dies ist gegeben, falls a) jeder Teilnehmer die gleiche Anzahl Gewinnzahlen zugeordnet bekommt und b) falls die möglichen Blockhash-Werte für die Gewinnerauswahl gleichverteilt sind.\\
@@ -109,10 +109,10 @@ TODO check
 Bobtail: A Proof-of-Work Target that Reduces Blockchain Mining Variance (Brian N. Levine)
 https://stanford2017.scalingbitcoin.org/presentations
 
-\subsection{Blockchain Forks}
+\subsection{Blockchain Forks} \label{sssec:btc_fork}
 Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain ketten sind nun gleich lang. Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist.
 
-\subsection{Auszahlungstransaktion}
+\subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass sein Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und man somit eine höhere Transaktionsgebühr zahlen muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.
 
 \begin{figure}[H]

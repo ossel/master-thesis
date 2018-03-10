@@ -143,27 +143,59 @@ Sollte es bei der Auszahlung ein Problem geben, wird die Exception gefangen und 
 
 \subsection{Grafische Benutzeroberfläche}\label{ssec:btc_gui}
 
-Die Graphische Oberfläche der Anwendung ist mit dem Tapestry Framework von Apache realisiert. Da die GUI Komponente nur die Daten visualisiert, wird an dieser Stelle auf eine genauere Betrachtung verzichtet und lediglich die Benutzeroberfläche gezeigt.
+Die graphische Oberfläche der Anwendung ist mit dem Tapestry Framework von Apache realisiert. Da die GUI Komponente nur die Daten visualisiert, wird an dieser Stelle auf eine genauere Betrachtung verzichtet und lediglich die Benutzeroberfläche gezeigt.
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_open2}
+\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_open_empty}
 \decoRule
 \caption{Leerer Topf}
-\label{fig:pot_open2}
+\label{fig:pot_open_empty}
 \end{figure}
-Abbildung \ref{fig:pot_open2} zeigt einen Topf mit 2 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 0,001 Bitcoin an die angezeigte Adresse senden. Der angezeigte QR-Code erleichtert dem Spieler die Übertragung dieser Daten in das Überweisungsformular seines Smartphone Wallets. Das \textbf{B}itcoin \textbf{I}mprovement \textbf{P}roposal Nummer 21\citep{bip21} legt fest, in welchem Format diese Daten kodiert werden müssen, damit beliebige Bitcoin Clients diese korrekt auslesen können. 
-Folgende Daten sind in dem QR Code enthalten: ''bitcoin:mws1YS...Ae5?amount=0.01\&message=gambling''
+Abbildung \ref{fig:pot_open_empty} zeigt einen Topf mit 2 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 0,001 Bitcoin an die angezeigte Adresse senden. Der angezeigte QR-Code erleichtert dem Spieler die Übertragung dieser Daten in das Überweisungsformular seines Smartphone Wallets. Das \textbf{B}itcoin \textbf{I}mprovement \textbf{P}roposal Nummer 21\citep{bip21} legt fest, in welchem Format diese Daten kodiert werden müssen, damit beliebige Bitcoin Clients diese korrekt auslesen können. 
+Folgende Daten sind in dem QR Code enthalten:\\ ''bitcoin:muQrtRbvGLtyVGZWVZq6rryHmS1nmFu3Xk?amount=0.01''
 
+\vspace{1cm}
+\begin{minipage}{0.48\textwidth}
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\linewidth]{Figures/btc_gui/handy_send}
 \decoRule
-\caption{Zahlung mit Smartphone}
+\caption{Smartphone Überweisungsformular}
 \label{fig:handy_send}
 \end{figure}
-Abbildung \ref{fig:handy_send} zeigt das Bitcoin CoPay Wallet\footnote{\url{https://copay.io/}}. Dieses erlaubt es Zahlungen an das Bitcoin Testnetz zu senden. Nachdem der Benutzer den QR-Code der Glücksspielanwendung mit seinem Smartphone abgescannt hat, erscheint sowohl der Betrag als auch die Empfangsadresse vor-ausgefüllt im Überweisungsformular. Die Wallet berechnet automatisch eine passende Transaktionsgebühr. Der Spieler prüft lediglich die Adresse und den Betrag und  autorisiert anschließend die Zahlung.
+\end{minipage}
+\begin{minipage}{0.48\textwidth}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/btc_gui/handy_confirm}
+\decoRule
+\caption{Zahlungsbestätigung}
+\label{fig:handy_confirm}
+\end{figure}
+\end{minipage}
+
+Abbildungen \ref{fig:handy_send} und \ref{fig:handy_confirm} zeigen das Bitcoin CoPay Wallet\footnote{\url{https://copay.io/}}. Dieses erlaubt es Zahlungen an das Bitcoin Testnetz zu senden. Nachdem der Benutzer den QR-Code der Glücksspielanwendung mit seinem Smartphone abgescannt hat, erscheint sowohl der Betrag als auch die Empfangsadresse vor-ausgefüllt im Überweisungsformular. Die Wallet berechnet automatisch eine passende Transaktionsgebühr. Der Spieler prüft lediglich die Adresse und den Betrag und  autorisiert anschließend die Zahlung.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_open_payment_received}
+\decoRule
+\caption{Transaktion empfangen}
+\label{fig:pot_open_payment_received}
+\end{figure}
+
+Sobald die Anwendung die Transaktion empfängt, zeigt sie dies durch einen grünen Haken an. Dies ist in Abbildungen \ref{fig:pot_open_payment_received} zu sehen. Zu diesem Zeitpunkt handelt es sich um eine unbestätigte Transaktion, die noch in keinen Bock der Blockchain aufgenommen wurde.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_open_p1_confirmed}
+\decoRule
+\caption{Spieler zu Topf hinzugefügt.}
+\label{fig:pot_open_p1_confirmed}
+\end{figure}
+Sobald die Anwendung einen neuen Block empfängt, der die Transaktion enthält, gilt die Transaktion als bestätigt und der Spieler wird zum Topf hinzugefügt. Nun gibt es nur noch einen offenen Platz im Topf.
 
 \begin{figure}[H]
 \centering
@@ -172,23 +204,24 @@ Abbildung \ref{fig:handy_send} zeigt das Bitcoin CoPay Wallet\footnote{\url{http
 \caption{Topf geschlossen}
 \label{fig:pot_closed}
 \end{figure}
-Nachdem die Zahlung von der Glücksspielanwendung erkannt wurde und ein weiterer Spieler in den Topf eingezahlt hat, ist der Topf voll. Nun wartet die Anwendung auf den Payout Block, der den Gewinner des Topfs festlegt. Da der Blockhash noch nicht feststeht, zeigt die Anwendung die Animation eines sich sehr schnell wechselnden Block Hash, der mehrere Fragezeichen enthält, an. Dies ist in Abbildung \ref{fig:pot_closed} zu sehen.
+
+Nachdem ein weiterer Spieler in den Topf eingezahlt hat, ist der Topf voll. Die Anwendung schließt den aktuellen Topf und öffnet einen neuen Topf. Der in \ref{fig:pot_closed} gezeigte neue Topf hat fünf freie Plätze. Die Anwendung wartet nun auf den Payout Block, um den Gewinner des geschlossenen Topfs festzulegen. Da der Blockhash noch nicht feststeht, zeigt die Anwendung die Animation eines sich sehr schnell wechselnden Block Hash, der mehrere Fragezeichen enthält, an.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_settled}
+\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_closed_triggering_payout}
 \decoRule
 \caption{Gewinner ermittelt}
-\label{fig:pot_settled}
+\label{fig:pot_closed_triggering_payout}
 \end{figure}
-Sobald der entscheidende Block empfangen wird, wird der voraussichtliche Gewinner des Topfs durch ein rotes Rechteck markiert. Nun wartet die Anwendung bis ein weiterer Block gefunden wird, bevor sie die Auszahlung an den Gewinner startet. 
+Sobald der entscheidende Block empfangen wird, wird der voraussichtliche Gewinner des Topfs durch ein rotes Rechteck markiert. Außerdem zeigt die Anwendung durch welche Berechnung der Gewinner festgelegt wurde. Nun wartet die Anwendung bis ein weiterer Block gefunden wird, bevor sie die Auszahlung an den Gewinner startet. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_payout_finished}
+\includegraphics[width=1\linewidth]{Figures/btc_gui/pot_closed_payout_finished}
 \decoRule
 \caption{Auszahlung beendet}
-\label{fig:pot_settled}
+\label{fig:pot_closed_payout_finished}
 \end{figure}
 
-Klickt der Benutzer auf den \emph{Payout triggered} Link, gelangt er zu einem Blockexplorer. Dieser zeigt ihm die Transaktionsdetails an. 
+Klickt der Benutzer auf den \emph{Payout triggered} Link aus Abbildung \ref{fig:pot_closed_payout_finished}, gelangt er zu einem Blockexplorer. Dieser zeigt ihm die Transaktionsdetails an. Eine genauere Betrachtung findet in Abschnitt \ref{sssec:Auszahlungstransaktion} statt.

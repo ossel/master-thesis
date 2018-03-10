@@ -73,11 +73,88 @@ TODO
 
 \subsection{Grafische Benutzeroberfläche}
 
+Das folgende Beispiel betrachtet einen frisch auf dem Ethereum Rinkeby Testnetzwerk bereitgestellten Smart Contract.
 
-Die Webapplikation konsumiert den lokal laufenden Webservice. Hier dann mal schauen wie viel schneller es ist die buisness logic direkt aufzurufen und den Webservice zu umgehen. Die Resultate ebenfalls in die Masterarbeit aufnehmen.
 
-    Hier das Model View Controller Pattern verwenden.
-    Tapestry Wen Framework erklären
-    GUI Schicht ist es egal ob sie Ethereum Daten oder DASH Daten bekommt. Stichwort Tapestry Service.
-    Bild von MVC pattern und java Klassendiagramm
-    Zeigen wie die Empfangsaddresse in den QR code kodiert ist. Hier könnte man auch das entsprechende BIP nennen.
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_pot_empty}
+\decoRule
+\caption{Leerer Topf}
+\label{fig:ETH_pot_empty}
+\end{figure}
+Abbildung \ref{fig:ETH_pot_empty} zeigt einen Topf mit 3 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 1000 WEI (kleinste Ether Einheit) an den Smart Contract senden. Genau wie bei Bitcoin wird dem Nutzer ein QR-Code angezeigt, der die Übermittlung der Daten in einen Smartphone Client erleichtert. Das \textbf{E}thereum \textbf{I}mprovement \textbf{P}roposal Nummer 681\citep{eip21} legt die Kodierung der Daten fest.
+Folgende Daten sind in dem QR Code enthalten:\\ ''ethereum:0x9b04da87b9bedafaee8f02c53bb5e290dce0cf2d/deposit?value=1000''. In diesem Beispiel verwenden wir für die Interaktion mit dem Netzwerk keinen Smartphone Client sondern die Webanwendung namens ''My Ether Wallet''\footnote{\url{https://www.myetherwallet.com/\#contracts}}. Diese benötigt für die Interaktion mit dem Smart Contract sowohl die Contract Adresse als auch das \textbf{A}pplication \textbf{B}inary \textbf{I}nterface.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_wallet}
+\decoRule
+\caption{My Ether Wallet}
+\label{fig:ETH_wallet}
+\end{figure}
+
+Nachdem der Nutzer diese wie in Abbildung \ref{fig:ETH_wallet} eingegeben hat kann er über eine Dropdown-Liste die gewünschte Funktion des Smart Contracts aufrufen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.85]{Figures/eth_gui/ETH_wallet_expected_amount}
+\decoRule
+\caption{Aufruf der \code{EXPECTED POT AMOUNT} Funktion}
+\label{fig:ETH_wallet_expected_amount}
+\end{figure}
+
+Abbildung \ref{fig:ETH_wallet_expected_amount} zeigt den Aufruf der Funktion auf, die zurückgibt, welchen Geldbetrag der Smart Contract vom Spieler erwartet. Da es sich lediglich um einen lesenden Zugriff handelt, wird keine Transaktion ans Netzwerk gesendet, beziehungsweise in die Blockchain geschrieben. Es fallen somit keine Transaktionskosten an.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_wallet_deposit}
+\decoRule
+\caption{Aufruf der \code{deposit} Funktion}
+\label{fig:ETH_wallet_deposit}
+\end{figure}
+
+Da der Nutzer nun nachgeprüft hat, dass der Smart Contract wirklich Zahlungen von 1000 WEI erwartet, kann er die \code{depsoit} Funktion mit diesem Betrag aufrufen.
+Die Wallet Webseite erwartet den Betrag in der Einheit Ether. Die geforderten 1000 WEI entsprechen 0.000000000000001 Ether. Die Umrechnung kann der Spieler mittels eines Online Konverters\footnote{\url{https://etherconverter.online/}} durchführen.
+Nun muss die erstellte Transaktion nur noch signiert werden. Der Nutzer kann der Webseite dazu seinen privaten Schlüssel mitteilen oder die Signierung eigenständig durch ein sogenanntes Hardware Wallet durchführen. Die Herausgabe seines privaten Schlüssels an eine Webseite ist aus sicherheitstechnischer Sicht keine gute Praktik. Sollte der Webseitenbetreiber böse Absichten haben oder die Webseite gehackt werden, führt dies zum Verlust des durch den Schlüssel kontrollierten Geldes. Eine sichere Variante ist die Verwendung eines Hardware Wallets. Dieses speichert alle privaten Schlüssel und führt die Signatur eigenständig durch. Der verwendete private Schlüssel verlässt somit niemals das Gerät. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_pot_1}
+\decoRule
+\caption{Eingang der ersten Zahlung}
+\label{fig:ETH_pot_1}
+\end{figure}
+
+Abbildung \ref{fig:ETH_pot_1} visualisiert den Zustand des Smart Contracts nachdem die erste Einzahlungstransaktion in die Blockchain aufgenommen wurde.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_pot_closed}
+\decoRule
+\caption{Topf geschlossen}
+\label{fig:ETH_pot_closed}
+\end{figure}
+
+Abbildung \ref{fig:ETH_pot_closed} visualisiert den Zustand des Smart Contracts nachdem die letzte Einzahlungstransaktion in die Blockchain aufgenommen wurde. Der Smart Contract hat den Topf geschlossen und wartet nun, dass einer der Spieler die \code{payout} Funktion aufruft.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_wallet_payout}
+\decoRule
+\caption{Aufruf der \code{payout} Funktion}
+\label{fig:ETH_wallet_payout}
+\end{figure}
+
+In Abbildung \ref{fig:ETH_wallet_payout} ist gezeigt wie ein Spieler die  \code{payout} Funktion aufruft. Durch den Aufruf dieser Funktion wird der Gewinner ausgewählt, die Auszahlung getätigt und der Topf wieder geöffnet.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/eth_gui/ETH_pot_finished}
+\decoRule
+\caption{Gewinner ausgewählt}
+\label{fig:ETH_pot_finished}
+\end{figure}
+
+Abbildung \ref{fig:ETH_pot_finished} zeigt den Gewinner des alten Topfs und den neu geöffneten Topf.
