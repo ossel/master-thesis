@@ -67,7 +67,7 @@ Mit dem Internetbrowser interagieren sie mit Glücksspielanwendung. Mit dem Bitc
 Das Peer-to-Peer Netzwerk besteht aus den anderen Teilnehmern des Netzwerks. Dies sind Full-, Light Nodes und Miner. Bei Kryptowährungsnetzwerken unterscheidet man in der Regel zwischen dem Test und Hauptnetzwerk. Den Bitcoins des Testnetzwerks wird kein monetärer Wert zugeschrieben. Das Testnetzwerk dient dazu Software die dem Bitcoin Netzwerk interagieren soll zu testen. Möchte ein Händler Bitcoin in seinen Onlineshop integrieren, kann er so seine Implementierung testen ohne ein finanzielles Risiko einzugehen. 
 
 \subsection{Datenmodel}
-Die Grundklasse die die Anwendung verwendet ist die Klasse Pot. Diese repräsentiert ein Spiel und speichert alle relevanten Daten. Sie besteht aus einer Liste von Teilnehmern (Participants). Jeder Teilnehmer hat wie im Konzept beschrieben eine Ein- und Auszahlungsadresse.
+Die Grundklasse die die Anwendung verwendet ist die Klasse \code{Pot}. Diese repräsentiert ein Spiel und speichert alle relevanten Daten. Sie besteht aus einer Liste von Teilnehmern (\code{Participant}). Jeder Teilnehmer hat wie im Konzept beschrieben eine Ein- und Auszahlungsadresse.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\linewidth]{Figures/umsetzung_btc/btc_datenmodell}
@@ -80,7 +80,7 @@ Die Grundklasse die die Anwendung verwendet ist die Klasse Pot. Diese repräsent
 \subsection{Geschäftslogik}
 
 Die Java Klassen der Glücksspielanwendung können, wie in Abbildung \ref{fig:btc_businesslogic} gezeigt, in 3 verschiedene Gruppen unterteilt werden. Das \textbf{Core Module} enthält die Klassen des Datenmodells und ein Interface mit dem die GUI Anwendung interagiert. Das Interface entkoppelt die Anzeigelogik der GUI von der Geschäftslogik der jeweiligen Kryptowährung. Die GUI Komponente bekommt von der Schnittstelle allgemeine Daten und kümmert sich nur um deren Anzeige.
-Das \textbf{Bitcoin Module} enthält die gesamte kryptowährungsspezifische Geschäftslogik. \textbf{BitcoinJ} enthält alle Klassen und Interfaces die benötigt werden um mit dem Bitcoin Netzwerk zu interagieren und Daten aus der Blockchain auszulesen.
+Das \textbf{Bitcoin Service Module} enthält die gesamte kryptowährungsspezifische Geschäftslogik. \textbf{BitcoinJ} enthält alle Klassen und Interfaces die benötigt werden um mit dem Bitcoin Netzwerk zu interagieren und Daten aus der Blockchain auszulesen.
 
 \begin{figure}[H]
 \centering
@@ -92,7 +92,7 @@ Das \textbf{Bitcoin Module} enthält die gesamte kryptowährungsspezifische Gesc
 
 \subsubsection{Start der Anwendung}
 Beim Kompilieren der Anwendung legt man über einen Konfigurationseintrag fest, ob die Anwendung mit dem Bitcoin Haupt- oder Testnetzwerk interagieren möchte.
-Für das Hauptnetzwerk wird die Java Klasse \textbf{BtcMainEjb} verwendet. Für das Testnetwerk wird die Klasse \textbf{BtcTestEjb} verwendet. Beide Klassen verwenden die gleiche Implementierung der abstrakten Oberklasse \code{AbstractBitcoinService}. Diese wiederum implementiert das von der GUI Komponente verwendete Interface \code{CryptoNetworkservice}.
+Für das Hauptnetzwerk wird die Java Klasse \code{BtcMainEjb} verwendet. Für das Testnetwerk wird die Klasse \code{BtcTestEjb} verwendet. Beide Klassen verwenden die gleiche Implementierung der abstrakten Oberklasse \code{AbstractBitcoinService}. Diese wiederum implementiert das von der GUI Komponente verwendete Interface \code{CryptoNetworkservice}.
 
 \input{CodeSnippets/BtcMainEjb.tex}
 Die beiden Klassen \code{BtcMainEjb} und \code{BtcTestEjb} sind mit \code{@Startup} und \code{@Singleton} annotiert. Es handelt sich um sogenannte \textbf{E}nterprise \textbf{J}ava \textbf{B}eans. Dies bedeutet, dass der Applikationsserver diese eigenständig managt und genau eine Instanz der Klasse beim Starten der Applikation erzeugt. Beim Start wird dann die mit \code{@PostConstruct} annotierte \code{startSpvNode} Methode aufgerufen und abgearbeitet. Diese konfiguriert und startet das \code{WalletAppKit}, welches die zentrale Klasse zur Interaktion mit der BitcoinJ Bibliothek darstellt.
@@ -103,14 +103,24 @@ Die beiden Klassen \code{BtcMainEjb} und \code{BtcTestEjb} sind mit \code{@Start
 
 Der folgende Code zeigt die Implementierung der Methoden die von der GUI Komponente aufgerufen werden können.
 \input{CodeSnippets/btcGuiEvents.tex}
-Zeile 2 gibt eine Kopie der Topdaten an die GUI Komponente weiter. Da es sich lediglich um eine Kopie des Objektes handelt, ist es ausgeschlossen, dass durch die GUI Komponente der Status des Topfs manipuliert werden kann. Zeile 6 erzeugt eine neue Empfangsadresse. Zeile 9 gibt den Blockhash des neusten Blocks der SPV Blockheader Kette zurück. Zeile 12 gibt die Blocknummer des neusten Blocks der SPV Blockheader Kette zurück.
+Zeile 2 reicht die Daten des Topfs an die GUI Komponente weiter. Zeile 6 erzeugt eine neue Empfangsadresse und fügt einen weiteren möglichen Teilnehmer mit dieser Adresse der \code{possibleParticipants} Liste hinzu. Erst wenn eine Zahlung auf diese Adresse eingeht wird der Teilnehmer dem Topf hinzugefügt. Zeile 13 gibt den Blockhash des neusten Blocks der SPV Blockheader Kette zurück. Zeile 17 gibt die Blocknummer des neusten Blocks der SPV Blockheader Kette zurück.
 
 \subsubsection{Bitcoin Netzwerk Events}
 
-Immer wenn der SVP Node eine Transaktion auf eine vorher mittels der \code{bitcoinAppKit.wallet().freshAddress()} erzeugten Adresse empfängt, wird die \code{onCoinsReceived} Methode aufgerufen.
+Immer wenn der SVP Node eine Transaktion auf eine vorher mittels der\\ \code{bitcoinAppKit.wallet().freshAddress()} erzeugten Adresse empfängt, wird die \code{onCoinsReceived} Methode der Klasse \code{CoinsReceivedListener} aufgerufen.
 
 \input{CodeSnippets/btcCoinsListener.tex}
+Zunächst wird in Zeile 6 geprüft, ob der eingegangene Zahlungsbetrag mindestens so hoch ist, wie von aktuellen Topf gefordert. Ist dies nicht der Fall, wird die Zahlung ignoriert.
+Die Methode iteriert über die Output Adressen der Transaktion (Zeile 12) und prüft mit welcher Einzahlungsadresse der Teilnehmer (Teile 17) diese übereinstimmt. Handelt es sich bei der Output Adresse um keine Einzahlungsadresse eines Teilnehmers, wird diese ignoriert, da es sich wohl um eine Wechselgeldadresse eines Teilnehmers handeln muss. Hat man den Teilnehmer identifiziert, wird aus der Transaktion die Auszahlungsadresse berechnet und dem Teilnehmer der empfangene Geldbetrag gutgeschrieben (Zeile 19-21). Da es sich um eine gültige jedoch noch unbestätigte Transaktion handelt, wird der Teilnehmer erst nachdem die Transaktion in einen gültigen Block aufgenommen wurde zum Topf hinzugefügt. Zeile 22 erzeugt einen \code{TxnConfidenceListener} der diese Aufgabe übernimmt.
 
+\input{CodeSnippets/btcTxnConfidence.tex}
+Die \code{onTransactionConfidenceChanged} Methode wird jedes mal aufgerufen wenn dem SPV Client neue Daten zur Transaktion vorliegen. BitcoinJ unterscheidet zwischen vier verschiedenen \code{ConfidenceType}:
+\begin{itemize}
+\item PENDING: Bedeutet, dass die Transaktion noch unbestätigt ist und der SPV Client darauf wartet, dass er einen Block erhält in dem die Transaktion enthalten ist.
+\item BUILDING: Bedeutet, dass die Transaktion bereits in die Blockchain aufgenommen wurde. Durch den Aufruf von\\ \code{transaction.getConfidence().getAppearedAtChainHeight()} kann man abfragen wie tief die Transaktion bereits in der Blockchain steckt. Diese Methode gibt zurück wie viele Blöcke bereits auf den Block, der die Transaktion enthält, aufbauen. Die Glücksspielanwendung betrachtet eine Transaktion ab dem Zeitpunkt als final, ab dem sie in einen gültigen Block aufgenommen wurde.\footnote{Vor der Auszahlung kann die Anwendung erneut nachprüfen, ob es eine Restrukturierung der Blockchain durch einen Blockchainfork gab, und ob es dadurch möglicherweise eine Transaktionen noch nicht in die längste Blockkette geschafft hat.} Geschieht dies, wird der Teilnehmer der Transaktion in den Topf hinzugefügt
+\item IN CONFLICT: In diesem Fall hat der SPV Client zwei Transaktionen erhalten, die versuchen den gleichen Transaction-Output auszugeben. Man spricht von einem sogenannten ''double spend'' Angriff. 
+\item DEAD: Transaktionen die diesen Status erhalten, können nicht mehr bestätigt werden, außer es kommt zu einer Blockchain Restrukturierung.
+\end{itemize}
 
 Immer wenn der SVP Node einen neuen besten Block findet, den er vorne an die Header Kette anhängen kann, wird die \code{notifyNewBestBlock} Methode aufgerufen.
 \input{CodeSnippets/btcBlockListener.tex}
@@ -122,7 +132,7 @@ Diese Methode iteriert über jeden bereits geschlossenen Topf für den noch kein
 \item In diesem Fall gibt es mindestens einen Block, der auf dem Payout-Block des Topfs aufbaut. Ab diesem Zeitpunkt betrachtet die Anwendung den Gewinner als final.\footnote{An dieser Stelle kann man natürlich auch aus Sicherheitsgründen noch mehrere Blöcke abwarten, bevor die Anwendung eine Auszahlung startet.} Daher wird der Gewinner des Topfs überschrieben und die Auszahlung in einem neuen \code{Thread} gestartet.
 \end{enumerate}
 
-Die Klasse \code{ExtendedBlock} teilt den Blockhash zur Anzeige in der GUI in die Werte perfix, lastDigit und suffix. Die Variable lastDigit speichert die letzte numerische Stelle des Blockhashs und wird zur Gewinnerauswahl verwendet.
+Die Klasse \code{ExtendedBlock} teilt den Blockhash zur Anzeige in der GUI in die Werte \code{perfix}, \code{lastDigit} und \code{suffix}. Die Variable \code{lastDigit} speichert die letzte numerische Stelle des Blockhashs und wird zur Gewinnerauswahl verwendet.
 
 \input{CodeSnippets/btcSelectWinner.tex}
 

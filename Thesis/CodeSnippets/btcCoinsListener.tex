@@ -1,4 +1,29 @@
-\begin{lstlisting}
-TODO
+\begin{lstlisting}[basicstyle=\small]
+@Override
+public void onCoinsReceived(Wallet wallet, Transaction txn, Coin prevBalance, Coin newBalance) {
+  log.debug("Transaction details: " + txn.toString());
+  Coin value = txn.getValueSentToMe(wallet);
+  Pot currentPot = service.getCurrentPot();
+  if (currentPot.getExpectedBettingAmount() > value.getValue()) {
+    log.warn("Player did not pay enough.");
+    return;
+  }
+  List<Participant> participants = service.getPossibleParticipants();
+  NetworkParameters params = service.getAppKit().params();
+  for (TransactionOutput txnOutput : txn.getOutputs()) {
+    Address a = txnOutput.getAddressFromP2PKHScript(params);
+    String address = a.toString();
+    for (Participant participant : participants) {
+      String depositAddress = participant.getDepositAddress();
+      if (depositAddress.equals(address)) {
+        log.info("Received " + value.toFriendlyString() + " coins from " + participant.toString());
+        participant.setReceivedAmount(value.getValue());
+        String fromAddress = txn.getInput(0).getFromAddress().toString();
+        participant.setPayoutAddress(fromAddress);
+        wallet.addTransactionConfidenceEventListener(new TxnConfidenceListener(service, txn, participant));
+      }
+    }
+  }
+}
 \end{lstlisting}
 

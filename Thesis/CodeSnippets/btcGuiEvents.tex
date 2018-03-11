@@ -1,13 +1,19 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 public Pot getCurrentPot() {
-    return currentPot.clone();
+    return currentPot;
 }
+
 public String getDepositAddress() {
-    return bitcoinAppKit.wallet().freshAddress(KeyPurpose.RECEIVE_FUNDS).toString();
+    String depositAddress =
+        bitcoinAppKit.wallet().freshAddress(KeyPurpose.RECEIVE_FUNDS).toString();
+    possibleParticipants.add(new Participant(depositAddress));
+    return depositAddress;
 }
+
 public String getCurrentBlockHash() {
     return bitcoinAppKit.chain().getChainHead().getHeader().getHash().toString();
 }
+
 public int getCurrentBlockHeight() {
     return bitcoinAppKit.chain().getChainHead().getHeight();
 }

@@ -1,16 +1,13 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 private void payout(Pot pot) throws InsufficientMoneyException, InterruptedException, ExecutionException {
     if (pot.isPayoutStarted()) {
-        log.error("Payout already started: " + pot.getPayoutTxnId() + " - "
-                + pot.getPayoutError());
+        log.error("Payout already started: " + pot.getPayoutTxnId() + " - " + pot.getPayoutError());
     } else {
         pot.setPayoutStarted(true);
-        Address winnerAddress = new Address(bitcoinService.getNetworkParams(),
-                pot.getWinner().getPayoutAddress());
-        Coin potValue = Coin.SATOSHI
-                .multiply(pot.getParticipants().size() * pot.getExpectedBettingamount());
+        Address winnerAddress = new Address(bitcoinService.getNetworkParams(), pot.getWinner().getPayoutAddress());
+        Coin potValue = Coin.SATOSHI.multiply(pot.getParticipants().size() * pot.getExpectedBettingamount());
         Wallet.SendResult result = bitcoinService.getAppKit().wallet()
-                .sendCoins(bitcoinService.getAppKit().peerGroup(), winnerAddress, potValue);
+        .sendCoins(bitcoinService.getAppKit().peerGroup(), winnerAddress, potValue);
         String txnId = result.tx.getHash().toString();
         pot.setPayoutTxnId(txnId);
         log.info("Payout TXN ID = " + txnId);

@@ -1,18 +1,19 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small] %or \tiny or \small or \footnotesize etc.
 @PostConstruct
 private void startSvpNode() {
     log.info("#### Start Bitcoin SPV Node  ####");
-    currentPot = new Pot(getCryptoNetwork().getCryptoCurrency(), 2, EXPECTED_BETTING_AMOUNT);
-    log.info("Bitcoin wallet directory = " + CoreUtil.getWalletDirectory().getAbsolutePath());
-    bitcoinAppKit = new WalletAppKit(getNetworkParams(), CoreUtil.getWalletDirectory(),
-            WALLET_FILE_NAME) {
+    currentPot = new Pot(2, 100000L);
+    File walletDir = CoreUtil.getWalletDirectory();
+    NetworkParameters params = getNetworkParams();
+    String fileName = "bitcoin-" + params.getPaymentProtocolId();
+    bitcoinAppKit = new WalletAppKit(params, walletDir, fileName) {
         @Override
         protected void onSetupCompleted() {
-            log.info("#### Bitcoin SPV Node [" + bitcoinAppKit.state() + "] ####");
+            log.info("#### Bitcoin SPV Node started ####");
         }
     };
     bitcoinAppKit.startAsync();
-    log.info("Bitcoin appkit started.");
+    waitUntilStarted(bitcoinAppKit);
     newBlockListener = new NewBlockListener(this);
     bitcoinAppKit.chain().addNewBestBlockListener(newBlockListener);
     coinReceivedListener = new CoinsReceivedListener(this);

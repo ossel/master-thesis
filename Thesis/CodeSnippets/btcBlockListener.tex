@@ -1,4 +1,4 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 @Override
 public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
     log.info("New Block height = " + block.getHeight() + " hash = "
@@ -6,10 +6,10 @@ public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
     List<Pot> unfinishedPots = getUnfinishedPots(service.getClosedPots());
     for (Pot pot : unfinishedPots) {
         long potId = pot.getCreateTime().getTime();
-        if (pot.getPayoutBlockHeight() > block.getHeight()) {
-            log.info("Pot[" + potId + "] can not be finished yet. Waiting for "
-                    + (pot.getPayoutBlockHeight() - block.getHeight()) + " more blocks.");
-        } else if (block.getHeight() == pot.getPayoutBlockHeight()) {
+        int payoutBlockHeight = pot.getPayoutBlockHeight();
+        if (payoutBlockHeight > block.getHeight()) {
+            log.info("Pot[" + potId + "] can not be handled yet.");
+        } else if (payoutBlockHeight == block.getHeight()) {
             log.info("Pot[" + potId + "] select temorary Winner.");
             Block tmpPayoutBlock = new ExtendedBlock(block.getHeader().getHash().toString());
             pot.setPayoutBlock(tmpPayoutBlock);
@@ -17,9 +17,9 @@ public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
         } else {
             log.info("Pot[" + potId + "] select final winner.");
             try {
-               StoredBlock correctBlock = getPastBlock(pot.getPayoutBlockHeight(), block);
-               Block finalPayoutBlock =
-                       new ExtendedBlock(correctBlock.getHeader().getHash().toString());
+               StoredBlock correctBlock = getPastBlock(payoutBlockHeight, block);
+               String payoutBlockHash = correctBlock.getHeader().getHash().toString();
+               Block finalPayoutBlock = new ExtendedBlock(payoutBlockHash);
                pot.setPayoutBlock(finalPayoutBlock);
                Participant winner = selectWinner(pot, finalPayoutBlock);
                log.info(winner.getDepositAddress() + " wins pot[" + potId + "].");

@@ -1,0 +1,31 @@
+\begin{lstlisting}[basicstyle=\small]
+@Override
+public void onTransactionConfidenceChanged(Wallet wallet, Transaction txn) {
+  if (txn.equals(targetTxn)) {
+    log.debug("onTransactionConfidenceChanged Tx: " + txn.getHash());
+    switch (txn.getConfidence().getConfidenceType()) {
+      case PENDING:
+        // unconfirmed but should be included shortly
+        break;
+      case BUILDING:
+        // transaction is included in the best chain
+        Pot currentPot = service.getCurrentPot();
+        participant.setPotIndex(currentPot.getNbrOfParticipants());
+        currentPot.addParticipant(participant);
+        if (currentPot.isFull()) {
+          service.closeCurrentPot(new Date());
+        }
+        wallet.removeTransactionConfidenceEventListener(this);
+        break;
+      case IN_CONFLICT:
+        log.warn("possible double spend of txn " + txn.getHashAsString());
+        break;
+      case DEAD:
+        log.warn("txn " + txn.getHashAsString()+ " won't confirm unless there is another re-org");
+        wallet.removeTransactionConfidenceEventListener(this);
+        break;
+    }
+  }
+}
+\end{lstlisting}
+

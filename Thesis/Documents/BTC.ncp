@@ -41,6 +41,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -63,63 +65,86 @@
     <Entities>
       <Entity type="Comment">
         <Text>Core Module</Text>
-        <Location left="237" top="743" />
-        <Size width="299" height="498" />
+        <Location left="248" top="1389" />
+        <Size width="299" height="574" />
       </Entity>
       <Entity type="Comment">
-        <Text>Bitcoin Module</Text>
-        <Location left="544" top="743" />
-        <Size width="663" height="498" />
+        <Text>Bitcoin Service Module</Text>
+        <Location left="567" top="1389" />
+        <Size width="663" height="574" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>BitcoinJ</Text>
+        <Location left="1253" top="1389" />
+        <Size width="295" height="574" />
+      </Entity>
+      <Entity type="Class">
+        <Name>Participant</Name>
+        <Access>Public</Access>
+        <Location left="353" top="1766" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>CryptoNetworkService</Name>
         <Access>Public</Access>
-        <Location left="264" top="782" />
-        <Size width="245" height="166" />
+        <Location left="275" top="1438" />
+        <Size width="245" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public String getCurrentBlockHash()</Member>
         <Member type="Method">public int getCurrentBlockHeight()</Member>
         <Member type="Method">public String getDepositAddress()</Member>
         <Member type="Method">public Pot getCurrentPot()</Member>
         <Member type="Method">public List&lt;Pot&gt; getClosedPots()</Member>
+        <Member type="Method">public List&lt;Participant&gt; getPossibleParticipants()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Pot</Name>
+        <Access>Default</Access>
+        <Location left="353" top="1832" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Enum">
         <Name>CryptoNetwork</Name>
         <Access>Public</Access>
-        <Location left="342" top="967" />
+        <Location left="353" top="1646" />
         <Size width="162" height="95" />
         <Collapsed>False</Collapsed>
         <Value>BTC_MAIN</Value>
         <Value>BTC_TEST</Value>
       </Entity>
       <Entity type="Class">
-        <Name>Participants</Name>
+        <Name>AbstractBitcoinService</Name>
         <Access>Public</Access>
-        <Location left="342" top="1086" />
-        <Size width="162" height="77" />
-        <Collapsed>True</Collapsed>
+        <Location left="621" top="1438" />
+        <Size width="288" height="240" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private WalletAppKit bitcoinAppKit</Member>
+        <Member type="Field">private Pot currentPot</Member>
+        <Member type="Field">private List&lt;Pot&gt; closedPots</Member>
+        <Member type="Field">private List&lt;Participant&gt; possibleParticipants</Member>
+        <Member type="Method">public abstract NetworkParameters getNetworkParams()</Member>
+        <Member type="Method">public abstract CryptoNetwork getCryptoNetwork()</Member>
+        <Member type="Method">private void startSpvNode()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>TxnConfidenceListener</Name>
+        <Access>Public</Access>
+        <Location left="1039" top="1834" />
+        <Size width="162" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Participant participant</Member>
+        <Member type="Field">private Transaction targetTxn</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>Pot</Name>
-        <Access>Default</Access>
-        <Location left="342" top="1153" />
-        <Size width="162" height="77" />
-        <Collapsed>True</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>BtcTestEjb</Name>
+        <Name>CoinsReceivedListener</Name>
         <Access>Public</Access>
-        <Location left="746" top="1091" />
-        <Size width="162" height="77" />
-        <Collapsed>True</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>BtcMainEjb</Name>
-        <Access>Public</Access>
-        <Location left="567" top="1091" />
+        <Location left="1039" top="1748" />
         <Size width="162" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
@@ -127,42 +152,55 @@
       <Entity type="Class">
         <Name>NewBlockListener</Name>
         <Access>Public</Access>
-        <Location left="1013" top="1019" />
+        <Location left="1039" top="1645" />
         <Size width="162" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>CoinsReceivedListener</Name>
+        <Name>BtcMainEjb</Name>
         <Access>Public</Access>
-        <Location left="1013" top="1117" />
+        <Location left="593" top="1748" />
         <Size width="162" height="77" />
         <Collapsed>True</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>AbstractBitcoinService</Name>
+        <Name>BtcTestEjb</Name>
         <Access>Public</Access>
-        <Location left="593" top="782" />
-        <Size width="288" height="240" />
+        <Location left="772" top="1748" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>TransactionConfidenceEventListener</Name>
+        <Access>Public</Access>
+        <Location left="1282" top="1852" />
+        <Size width="250" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">private WalletAppKit bitcoinAppKit</Member>
-        <Member type="Field">private Pot currentPot</Member>
-        <Member type="Field">private List&lt;Pot&gt; closedPots</Member>
-        <Member type="Method">public abstract NetworkParameters getNetworkParams()</Member>
-        <Member type="Method">public abstract CryptoNetwork getCryptoNetwork()</Member>
-        <Member type="Method">private void startSpvNode()</Member>
-        <Modifier>Abstract</Modifier>
+        <Member type="Method">public void onTransactionConfidenceChanged()</Member>
       </Entity>
-      <Entity type="Comment">
-        <Text>BitcoinJ</Text>
-        <Location left="1215" top="743" />
-        <Size width="295" height="498" />
+      <Entity type="Interface">
+        <Name>WalletCoinsReceivedEventListener</Name>
+        <Access>Public</Access>
+        <Location left="1282" top="1748" />
+        <Size width="250" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void onCoinsReceived()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>NewBestBlockListener</Name>
+        <Access>Public</Access>
+        <Location left="1282" top="1645" />
+        <Size width="173" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void notifyNewBestBlock()</Member>
       </Entity>
       <Entity type="Class">
         <Name>WalletAppKit</Name>
         <Access>Public</Access>
-        <Location left="1240" top="781" />
+        <Location left="1282" top="1438" />
         <Size width="182" height="196" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void startAsync()</Member>
@@ -174,94 +212,102 @@
         <Member type="Method">public State state()</Member>
         <Modifier>None</Modifier>
       </Entity>
-      <Entity type="Interface">
-        <Name>WalletCoinsReceivedEventListener</Name>
-        <Access>Public</Access>
-        <Location left="1240" top="1116" />
-        <Size width="250" height="94" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">public void onCoinsReceived()</Member>
-      </Entity>
-      <Entity type="Interface">
-        <Name>NewBestBlockListener</Name>
-        <Access>Public</Access>
-        <Location left="1240" top="1005" />
-        <Size width="173" height="94" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">public void notifyNewBestBlock()</Member>
-      </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Generalization" first="7" second="10">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>738</X>
-          <Y>1054</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="6" second="10">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>839</X>
-          <Y>1066</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>738</X>
-          <Y>1054</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="10" second="9">
+      <Relationship type="Association" first="7" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>963</X>
-          <Y>1058</Y>
+          <X>1002</X>
+          <Y>1716</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1014</X>
+          <Y>1770</Y>
+        </BendPoint>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="7" second="10">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1013</X>
+          <Y>1531</Y>
+        </BendPoint>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="8" second="7">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>986</X>
+          <Y>1858</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>988</X>
-          <Y>1139</Y>
+          <Y>1626</Y>
         </BendPoint>
-        <Direction>Bidirectional</Direction>
+        <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="10" second="8">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+      <Relationship type="Generalization" first="12" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>985</X>
-          <Y>875</Y>
+          <X>865</X>
+          <Y>1723</Y>
         </BendPoint>
-        <Direction>Bidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="10" second="2">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>568</X>
-          <Y>862</Y>
+        <BendPoint relativeToStartShape="False">
+          <X>766</X>
+          <Y>1710</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="10" second="12">
+      <Relationship type="Generalization" first="11" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>766</X>
+          <Y>1710</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="7" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>925</X>
-          <Y>852</Y>
+          <X>958</X>
+          <Y>1491</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
-      <Relationship type="Realization" first="8" second="14">
+      <Relationship type="Realization" first="10" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="9" second="13">
+      <Relationship type="Realization" first="9" second="14">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="8" second="13">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1231</X>
+          <Y>1885</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>
