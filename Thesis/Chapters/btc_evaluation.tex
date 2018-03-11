@@ -78,7 +78,7 @@ result[9] = 100284
 \includegraphics[width=\textwidth]{Figures/verteilung_sha256}
 \centering
 \decoRule
-\captionof{figure}{\label{fig:verteilung_sha256}Verteilung der SHA256 Hashfunktion}
+\captionof{figure}{Verteilung der SHA256 Hashfunktion}
 \label{fig:verteilung_sha256}
 \end{minipage}
 
@@ -110,7 +110,7 @@ Bobtail: A Proof-of-Work Target that Reduces Blockchain Mining Variance (Brian N
 https://stanford2017.scalingbitcoin.org/presentations
 
 \subsection{Blockchain Forks} \label{sssec:btc_fork}
-Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain ketten sind nun gleich lang. Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist.
+Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain ketten sind nun gleich lang. Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist. Forks kommen bei Bitcoin durch die hohe Hashrate des Netzwerks und die somit sehr hohe Difficulty recht selten vor. Die Webseite\footnote{\url{https://blockchain.info/orphaned-blocks}} zeigt an, wie oft gültige Blöcke gefunden werden, die es nicht in die Blockchain schaffen.
 
 \subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass sein Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und man somit eine höhere Transaktionsgebühr zahlen muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.
@@ -123,7 +123,7 @@ Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsad
 \label{fig:btc_txn}
 \end{figure}
 
-\label{fig:btc_txn} zeigt in welchen Block die Transaktion aufgenommen wurde. Den Status, den Wert, die Transaktionsgebühr und die Größe der Transaktion.
+Abbildung \ref{fig:btc_txn} zeigt in welchen Block die Transaktion aufgenommen wurde. Den Status, den Wert, die Transaktionsgebühr und die Größe der Transaktion.
 \footnote{Momentan zahlt die Glücksspielanwendung die Auszahlungstransaktionsgebühr aus eigener Tasche. Eigentlich müsste die Transaktionsgebühr von dem Gewinnbetrag abgezogen werden.}
 
 \begin{figure}[H]
@@ -135,7 +135,7 @@ Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsad
 \end{figure}
 
 
-\label{fig:btc_txn_input_output} zeigt welche Inputs und Outputs für die Transaktion verwendet wurden. Output Adresse 0 gehört dem Wallet der Glücksspielanwendung und stellt die Wechselgeldadresse dar.
+Abbildung \ref{fig:btc_txn_input_output} zeigt welche Inputs und Outputs für die Transaktion verwendet wurden. Output Adresse 0 gehört dem Wallet der Glücksspielanwendung und stellt die Wechselgeldadresse dar.
 
 
 \begin{figure}[H]
@@ -146,4 +146,4 @@ Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsad
 \label{fig:btc_txn_input_output_scripts}
 \end{figure}
 
-Da die Anwendung für jeden Benutzer eine eigene Adresse generiert, muss die Anwendung in der Auszahlungstransaktion für jede Input Adresse eine gültige Signatur angeben.\label{fig:btc_txn_input_output_scripts} zeigt, dass die Transaktion dadurch wesentlich größer wird. Hier könnte in Zukunft die Verwendung sogenannter Schnorr Multi-Signaturen aushelfen. Durch diese lassen sich alle Signaturen der Inputs durch eine einzige Signatur ersetzen.
+Da die Anwendung für jeden Benutzer eine eigene Adresse generiert, muss die Anwendung in der Auszahlungstransaktion für jede Input Adresse eine gültige Signatur angeben. Abbildung \ref{fig:btc_txn_input_output_scripts} zeigt, dass die Transaktion dadurch wesentlich größer wird. Hier könnte in Zukunft die Verwendung sogenannter Schnorr Multi-Signaturen aushelfen. Durch diese lassen sich alle Signaturen der Inputs durch eine einzige Signatur ersetzen. \citep{schnorr_sig}
