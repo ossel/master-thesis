@@ -1,44 +1,38 @@
 \section{Umsetzung}
-
 \subsection{Überblick}
-
-
-In dieser Masterarbeit wird unsere Applikation über die RPC Schnittstelle eines Full Nodes an das Ethereum-Netzwerk angebunden. Dies ist in Abbildung \ref{fig:ethereum_integration} verdeutlicht.
- 
-\begin{figure}
-\centering
-\includegraphics[width=1\linewidth]{Figures/ethereum_integration}
-\decoRule
-\caption{Ethereum: Netzwerk Integration}
-\label{fig:ethereum_integration}
-\end{figure}
-
-
-\subsection{Smart Contract}
-Die folgenden Codestücke beschreiben den TrustlessGambling Smart Contracts in der Sprache Solidity.
-\subsubsection{Datenmodell}
-
-\input{CodeSnippets/SmartContract/datenmodell.tex}
-
-\subsubsection{Einzahlungen}
-
-\input{CodeSnippets/SmartContract/einzahlungen.tex}
-
-\subsubsection{Auszahlungen}
-
-\input{CodeSnippets/SmartContract/auszahlungen.tex}
-
-\subsubsection{Einschränkungen}
-
-Da man bei Ethereum im Conrtact Code nur auf die 256 letzten Blockheader zugreifen kann, unterscheidet sich der Smart Contract leicht von dem im Konzept beschriebenen.
-
+Genau wie bei Bitcoin besteht die Möglichkeit die Glücksspielanwendung entweder mithilfe eines ''Light Nodes'' direkt, oder über einen ''Full Node'' indirekt mit dem Ethereum Netzwerk kommunizieren zu lassen. Für den Ethereum Teil dieser Masterarbeit findet die Kommunikation indirekt über einen Full Node statt. Dies ist in Abbildung \ref{fig:anwendung_aufbau} verdeutlicht. Der Full Node empfängt Transaktionen und Blöcke, validiert diese und akualisiert kontinuierlich den Zusatnd der durch die Transaktionen veränderten Ethereum Accounts. Über die RPC Schnittstelle stellt er diese Daten nach außen bereit. Die Java Bibliothek Web3J \cite{web3j} erleichtert den Aufruf der RPC Schnittstelle des Full Nodes. Anders als bei Bitcoin benötigt die Glücksspielanwendung keine eigene Datenbank, da der Zustand des aktuellen Topfs im Smart Contracts und somit ''in der Blockchain'' gespeichert ist.
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\linewidth]{Figures/umsetzung_eth/smart_contract_automat}
+\includegraphics[width=1\linewidth]{Figures/umsetzung_eth/anwendung_aufbau}
 \decoRule
-\caption{Smart Contract Umsetzung}
-\label{fig:smart_contract_automat}
+\caption{Ethereum: Netzwerk Integration}
+\label{fig:anwendung_aufbau}
 \end{figure}
+
+Möchte man eine Anwendung direkt in das Ethereum Netzwerk integrieren, bietet sich in Java die Bibliothek EthereumJ \cite{ethereumj} an. 
+
+\subsection{Smart Contract}
+Die folgenden Codestücke beschreiben den TrustlessGambling Smart Contracts in der Sprache Solidity\footnote{\url{https://solidity.readthedocs.io/en/v0.4.0/}}.
+
+\subsubsection{Datenmodell}
+Das folgenden Codestücke zeigt den Rahmen, alle Variablen und den Konstruktor des Smart Contracts.
+\input{CodeSnippets/SmartContract/datenmodell.tex}
+Zeile 1 definiert in welcher Version der Solidity Sprache der Smart Contract geschrieben ist. Dies muss vom Compiler berücksichtigt werden. Zeile 2 legt den Namen des Smart Contracts fest. Über die beiden Konstanten in Zeile 4 und 5 kann man die Anzahl Spieler, und den von jedem Spieler erwarteten Einzahlungsbetrag festlegen. Die in Zeile 6 festgelegte Konstante legt fest, welcher Block ab der letzten Einzahlungstransaktion den Gewinner festlegt. Diese Werte können nach der Bereitstellung des Smart Contracts nicht mehr verändert werden. Die Variablen von Zeile 8 bis Zeile 16 werden vom Smart Contract manipuliert und speichern den Zustand des aktuellen Topfes. Zeile 8 speichert wie viele Teilnehmer bereits eingezahlt haben. Zeile 9 und 10 speichern die Ein- und Auszahlungsadressen der aktuellen Teilnehmer. Die Zeilen 11 bis 14 speichern alle für die Gewinnerauswahl benötigten Werte. Zeile 15 definiert über den Wahrheitswert \code{potClosed}, ob der Topf offen ist und Einzahlungen stattfinden können, oder ob der Topf geschlossen ist. Der Nutzen des Wertes aus Zeile 16 wird in Abschnitt \ref{sssec:eth_nbrOfMissedPayouts} erklärt. Zeile 18 bis 22 beinhalten den einmalig bei der Bereitstellung des Smart Contracts aufgerufenen Konstruktor. Alle Variablen des Smart Contracts sind zur Schaffung maximaler Transparenz mit dem Schlüsselwort \code{public} markiert. Dies erlaubt es den Nutzern, alle Werte des Smart Contract abzurufen.
+
+\subsubsection{Einzahlungen}
+Einzahlungen finden über die beiden \code{deposit} Methoden statt. Diese sind mit dem Schlüsselwort \code{payable} markiert. Dies bedeutet, dass Transaktionen einen Ether-Betrag beim aufruf dieser Methoden angeben können.
+\input{CodeSnippets/SmartContract/einzahlungen.tex}
+Nutzt der Spieler die Methode aus Zeile 1, wir als Auszahlungsadresse einfach die Adresse der Transaktion verwendet. Nutzt der Spieler die Methode aus Zeile 4, hat er die Möglichkeit eine beliebige Auszahlungsadresse anzugeben. Bei der Einzahlung wird zunächst in Zeile 5 geprüft, ob der der Topf offen ist. Ist dies der Fall, prüft Zeile 6, dass der Eingezahlte Betrag mit dem fest definierten Wert übereinstimmt. Anschließen werden die Ein- und Auszahlungsadresse abgespeichert und die aktuelle Anzahl Teilnehmer um eins erhöht. Zeile 10 prüft, ob es sich um die letzte Einzahlungstransaktion handelt und schließt den Topf gegebenenfalls. Bevor der Topf geschlossen wird, wird allerdings noch in Zeile 11 die aktuelle Blocknummer abgespeichert und anschließend die Blocknummer für die Gewinnerauswahl berechnet.
+
+\subsubsection{Auszahlungen}\label{sssec:eth_nbrOfMissedPayouts}
+Auszahlungen finden durch den Aufruf der \code{payout} Methoden statt. Diese ist nicht mit dem Schlüsselwort \code{payable} markiert und erwartet keinen Ether-Betrag beim Aufruf.
+\input{CodeSnippets/SmartContract/auszahlungen.tex}
+Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die aktuelle Blocknummer bereits größer als die Blocknummer des Blocks für die Gewinnerauswahl ist. Sind diese Bedingungen erfüllt, hängt der weitere Verlauf der Abarbeitung der \code{payout} Methode vom Zeitpunkt des Methodenaufrufs ab. Smart Contracts können laut einer Konvention\footnote{Dies ist Effizienzgründen geschuldet. Blockheader sind in Ethereum mindestens 500 Byte groß, mit einer Blockzeit von 12 Sekunden wächst die Blockheaderkette somit täglich um 3,6 Megabyte. Der Zuwachs beträgt jährlich somit über 1 Gigabyte an Daten. Ein Ethereum Client der nicht die gesamte Blockheaderkette speichert, könnte somit nicht die Ausführung von Smart Contracts validieren, da ihm dazu die Daten aus der Vergangenheit fehlen.} bei ihrer Ausführung nur auf die Werte der 256 letzten Blockheader zugreifen\footnote{\url{http://solidity.readthedocs.io/en/develop/units-and-global-variables.html}}. Ist der in Zeile 4 angefragte \code{payoutBlockHash} älter als 256 Blocks, gibt \code{block.blockhash(<number>)} den Wert 0 zurück und Fall 1 tritt ein.
+\begin{enumerate}
+\item Fall: Der Aufruf der \code{payout} Methode findet zu spät statt. Es findet keine Auszahlung statt, da der Smart Contract nicht auf den entscheidenden Blockhash zugreifen kann. Der Smart Contract erhöht die \code{nbrOfMissedPayouts} Variable um eins. Dies führt dazu, dass Betrag des Topfs in den nächsten Topf verschoben wird. 
+\item Fall: Der Aufruf der \code{payout} Methode findet rechtzeitig statt. Der Smart Contract berechnet in Zeile 8 den Gewinner indem er den Blockhash in einen Integer konvertiert und diese sehr hohe Zahl modulo der Anzahl Teilnehmer rechnet. Anschließend wird der korrekte Auszahlungsbetrag berechnet und in Zeile 12 an die Auszahlungsadresse des Gewinners versandt.
+\end{enumerate}
+Zum Schluss wird der Topf wieder geöffnet und die Anzahl der teilnehmenden Spieler auf 0 gesetzt.
 
 \subsection{Smart Contract Bereitstellung}
 Nachdem man den Smart Contract programmiert hat, muss man ihn zu Bytecode kompilieren und anschließen in einer Transaktion an das Ethereum Netzwerk senden. Dazu kann man die von Web3J bereitgestellten Comandline Tool nutzen. Dieses Tool hilft bei der Generierung einer Wallet und erlaubt es aus dem Contract Code eine Java Klasse zu generieren. Dieser Klasse ermöglicht die Interaktion mit dem Smart Contract. 
@@ -46,7 +40,7 @@ Nachdem man den Smart Contract programmiert hat, muss man ihn zu Bytecode kompil
 \input{CodeSnippets/SmartContract/create.tex}
 Die Ausführung des oben gezeigten Java Codes führt zu der folgenden Ausgabe:
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 Account address = 0x2201f3919589b519135ce977cc0906c9481069b2
 Contract address = 0x25c3136145fbd7f3b9217e58e2fabe3eb1928705
 TXN hash = 0x06dce3c460b4caa595c5cc0f81ac78e7c70eeb1e89d3e0e6a017ea88e60dbce1
@@ -58,7 +52,7 @@ Alternativ zu Web3J lässt sich der Contract Code mithilfe eines Online Compiler
 
 \subsection{Geschäftslogik Webanwendung}
 
-Dieses Kapitel zeigt, wie man in Etherem über einen Full Node mit dem Netzwerk interagieren kann. Die Webanwendung zeigt lediglich lediglich den aktuellen Zustand des Smart Contracts an. Die gesamte Geschäftslogik des Smart Contracts wird vom Etherem Netzwerk ausgeführt. Sollte die Webanwendung aufgrund  technischer Fehler ausfallen, hat dies keinerlei Auswirkung auf das eigentliche Spiel.
+Dieses Kapitel zeigt, wie man in Etherem über einen Full Node mit dem Netzwerk interagieren kann. Die Webanwendung zeigt lediglich den aktuellen Zustand des Smart Contracts an. Die gesamte Geschäftslogik des Smart Contracts wird vom Etherem Netzwerk ausgeführt. Sollte die Webanwendung aufgrund technischer Fehler ausfallen, hat dies keinerlei Auswirkung auf das eigentliche Spiel.
 
 TODO 
 

@@ -1,10 +1,10 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 pragma solidity ^0.4.0;
 contract TrustlessGambling {
     // constants
     uint8 public constant NBR_OF_SLOTS =3;
-    uint8 public constant PAYOUT_BLOCK_OFFSET =1;
     uint public constant EXPECTED_POT_AMOUNT=1000;// wei
+    uint8 public constant PAYOUT_BLOCK_OFFSET =1;    
     // pot values
     uint public nbrOfParticipants;
     address[NBR_OF_SLOTS] public depositAddresses;

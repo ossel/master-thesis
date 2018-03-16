@@ -1,10 +1,10 @@
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\small]
 function deposit() payable public {
     deposit(msg.sender);
 }
 function deposit(address _payout) payable public {
-    assert(msg.value == EXPECTED_POT_AMOUNT);
     assert(!potClosed);
+    assert(msg.value == EXPECTED_POT_AMOUNT);
     depositAddresses[nbrOfParticipants] = msg.sender;
     payoutAddresses[nbrOfParticipants] = _payout;
     nbrOfParticipants++;
