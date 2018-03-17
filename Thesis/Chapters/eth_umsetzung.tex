@@ -1,12 +1,12 @@
 \section{Umsetzung}
 \subsection{Überblick}
-Genau wie bei Bitcoin besteht die Möglichkeit die Glücksspielanwendung entweder mithilfe eines ''Light Nodes'' direkt, oder über einen ''Full Node'' indirekt mit dem Ethereum Netzwerk kommunizieren zu lassen. Für den Ethereum Teil dieser Masterarbeit findet die Kommunikation indirekt über einen Full Node statt. Dies ist in Abbildung \ref{fig:anwendung_aufbau} verdeutlicht. Der Full Node empfängt Transaktionen und Blöcke, validiert diese und akualisiert kontinuierlich den Zusatnd der durch die Transaktionen veränderten Ethereum Accounts. Über die RPC Schnittstelle stellt er diese Daten nach außen bereit. Die Java Bibliothek Web3J \cite{web3j} erleichtert den Aufruf der RPC Schnittstelle des Full Nodes. Anders als bei Bitcoin benötigt die Glücksspielanwendung keine eigene Datenbank, da der Zustand des aktuellen Topfs im Smart Contracts und somit ''in der Blockchain'' gespeichert ist.
+Genau wie bei Bitcoin besteht die Möglichkeit die Glücksspielanwendung entweder mithilfe eines ''Light Nodes'' direkt, oder über einen ''Full Node'' indirekt mit dem Ethereum Netzwerk kommunizieren zu lassen. Für den Ethereum Teil dieser Masterarbeit findet die Kommunikation indirekt über einen Full Node statt. Dies ist in Abbildung \ref{fig:eth_anwendung_aufbau} verdeutlicht. Der Full Node empfängt Transaktionen und Blöcke, validiert diese und akualisiert kontinuierlich den Zusatnd der durch die Transaktionen veränderten Ethereum Accounts. Über die RPC Schnittstelle stellt er diese Daten nach außen bereit. Die Java Bibliothek Web3J \cite{web3j} erleichtert den Aufruf der RPC Schnittstelle des Full Nodes. Anders als bei Bitcoin benötigt die Glücksspielanwendung keine eigene Datenbank, da der Zustand des aktuellen Topfs im Smart Contracts und somit ''in der Blockchain'' gespeichert ist.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\linewidth]{Figures/umsetzung_eth/anwendung_aufbau}
 \decoRule
 \caption{Ethereum: Netzwerk Integration}
-\label{fig:anwendung_aufbau}
+\label{fig:eth_anwendung_aufbau}
 \end{figure}
 
 Möchte man eine Anwendung direkt in das Ethereum Netzwerk integrieren, bietet sich in Java die Bibliothek EthereumJ \cite{ethereumj} an. 
@@ -35,9 +35,41 @@ Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die a
 Zum Schluss wird der Topf wieder geöffnet und die Anzahl der teilnehmenden Spieler auf 0 gesetzt.
 
 \subsection{Smart Contract Bereitstellung}
-Nachdem man den Smart Contract programmiert hat, muss man ihn zu Bytecode kompilieren und anschließen in einer Transaktion an das Ethereum Netzwerk senden. Dazu kann man die von Web3J bereitgestellten Comandline Tool nutzen. Dieses Tool hilft bei der Generierung einer Wallet und erlaubt es aus dem Contract Code eine Java Klasse zu generieren. Dieser Klasse ermöglicht die Interaktion mit dem Smart Contract. 
+Nachdem man den Smart Contract programmiert hat, muss man ihn zu Bytecode kompilieren und anschließen in einer Transaktion an das Ethereum Netzwerk senden. Der in Solidity geschriebene Smart Contract Code kann mithilfe eines Online Compilers \footnote{\url{https://ethereum.github.io/browser-solidity}} kompiliert werden. Das Kompilieren erzeugt die Dateien {TrustlessGambling.bin} und {TrustlessGambling.abi}. Diese enthalten den Bytecode und das Smart Contract \textbf{A}pplication \textbf{B}inary \textbf{I}nterface.
+Um in der Programmiersprache Java mit dem Smart Contract interagieren zu können stellt Web3J sogenannte Comandline Tools\footnote{\url{https://docs.web3j.io/command_line.html}} zur Verfügung. Durch den Aufruf des folgenden Befehl wird die Klasse \code{TrustlessGambling.java} erzeugt. 
+\begin{lstlisting}[basicstyle=\small]
+web3j solidity generate TrustlessGambling.bin TrustlessGambling.abi -o /path/to/src/main/java -p com.ossel.gamble.ethereum.generated
+\end{lstlisting}
+Da zur Bereitstellung des Smart Contracts auch die entsprechenden Transaktionsgebühren bezahlen muss, wird eine Wallet benötigt. Web3J hilft auch bei diesem Schritt. Der folgende Befehl leitet die Generierung einer Wallet ein.
+\begin{lstlisting}[basicstyle=\small]
+web3j wallet create
+\end{lstlisting}
+Über die Kommandozeile muss der Benutzer den gewünschten Wallet-Dateinamen  und ein Passwort angeben. In diesem Beispiel wird der Dateiname \code{ethereum.json} und das Passwort \code{changeit} verwendet. Anschließen wird die Wallet generiert und die Ethereum Account Adresse ausgegeben. Diese ist in diesem Beispiel die Adresse  \code{0x2201f3919589b519135ce977cc0906c9481069b2}.
+Bevor der Smart Contract durch eine Transaktion veröffentlicht wird, müssen wir zunächst eins der Ethereum Netzwerke wählen und in den Besitz der auf diesem verwendeten Ether-Währung. 
+Bei Ethereum gibt es die folgende Netzwerke zur Auswahl:
+\begin{enumerate}
+\item Mainnet: Genau wie bei Bitcoin handelt es sich bei diesem Netzwerk um das Produktionsnetzwerk. 
+\item Ropsten Testnetz: Hierbei handelt es sich um ein Testnetz, dass Proof-of-Work als Konsensalgorithmus verwendet und ist dem Ethereum Mainnet am ähnlichsten. Der auf diesem Netzwerk ausgetauschten Ether-Währung wird allerdings kein finanzieller Wert zugemessen.
+\item Rinkeby Testnetz: Hierbei handelt es sich um ein Testnetz, das nicht Proof-of-Work, sondern das Clique-Proof-of-Authority Protokoll als Konsens-Algorithmus verwendet. Im Gegensatz zu Proof-of-Work wird ein Konsens durch das Signieren von Blocken durch bekannte Teilnehmer gewährleistet. Das Ethereum Improvement Proposal \cite{eip_rinkeby} beschreibt den verwendeten Vorgang detailliert.
+\end{enumerate}
+Das Problem bei der Verwendung des Proof-of-Work Algorithmus auf einem Testnetz ist, dass Miner für ihren Stromverbrauch nur in der wertlosen Testnetz-Währung bezahlt werden. Daraus resultiert, dass solch ein Testnetz nur eine sehr geringe Hashrate aufweist. Ein Angreifer der eine signifikante Hashrate besitzt kann beispielsweise nur noch Blöcke erzeugen, die keine Transaktionen beinhalten und dadurch das Testnetz für eine gewisse Zeit lahmlegen. Das Rinkeby Testnetz ist gegen solche Angriffe resistenter und daher im allgemeinen das stabilere Testnetzwerk. Um Ether auf dem Rinkeby Testnetz zu erhalten, verwendet man eine sogenannte Faucete\footnote{\url{https://faucet.rinkeby.io/}}, die in regelmäßigen Abständen Ether an eine beliebige Adresse versendet. Nachdem die Wallet über Ether verfügt kann man mit Hilfe von Web3J den geschriebenen Smart Contract bereitstellen. Abbildung \ref{fig:eth_web3j} listet die dazu verwendeten Klassen und die generierte \code{TrustlessGambling} Klasse auf.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/umsetzung_eth/eth_web3j}
+\decoRule
+\caption{Klassendiagramm Web3J}
+\label{fig:eth_web3j}
+\end{figure}
+
+Der folgende Java Code sorgt dafür, dass der von Web3J angesprochene Full Node den Smart Conrtact in einer Transaktion an das Rinkeby Testnetz sendet.
 
 \input{CodeSnippets/SmartContract/create.tex}
+
+In Zeile 5 wird der Web3J Service erzeugt. Dieser kümmert sich um die Kommunikation mit dem Full Node. Die übergebene URL legt die Adresse des Full Nodes fest. Infura\footnote{\url{https://infura.io/}} ist dabei ein Service der sich auf das Hosting von Ethereum Full Nodes spezialisiert hat. Über einen API Schlüssel kann man sich zu seinem Full Node verbinden. Statt des von Infura betriebenen Nodes kann man auch einen eigens gemanagten Full Node verwenden, um die volle Kontrolle zu behalten. In diesem Fall verwendet man statt des \code{InfuraHttpService} direkt die Oberklasse \code{HttpService}.
+Zeile 6 fragt den Full Node nach dem aktuell zu bezahlenden Gaspreis.
+In Zeile 8 wird das durch die Web3J Comandline Tools erzeugte Wallet geladen. Mithilfe dieses wird unter Zuhilfenahme des Passworts die im nächsten Schritt verwendeten \code{Credentials} geladen.
+In Zeile 11 wird der Smart Contract durch den Aufruf der statischen \code{TrustlessGambling.deploy} Methode in der Transaktion an das Netzwerk gesendet. Dabei wird ein Gaslimit von einer Million WEI festgelegt.
 Die Ausführung des oben gezeigten Java Codes führt zu der folgenden Ausgabe:
 
 \begin{lstlisting}[basicstyle=\small]
@@ -47,23 +79,62 @@ TXN hash = 0x06dce3c460b4caa595c5cc0f81ac78e7c70eeb1e89d3e0e6a017ea88e60dbce1
 Gas used = 825846
 \end{lstlisting}
 
-In einem Blockchain Explorer kann man die Details der vom Full Node erstellten Transaktion\footnote{\url{https://rinkeby.etherscan.io/tx/0x06dce3c460b4caa595c5cc0f81ac78e7c70eeb1e89d3e0e6a017ea88e60dbce1}} und den kompilierten Contract Code\footnote{\url{https://rinkeby.etherscan.io/address/0x25c3136145fbd7f3b9217e58e2fabe3eb1928705\#code}} anschauen.
-Alternativ zu Web3J lässt sich der Contract Code mithilfe eines Online Compilers \footnote{\url{https://ethereum.github.io/browser-solidity}} kompilieren und mithilfe des Ethereum Clients namens Mist\footnote{\url{https://github.com/ethereum/mist}} veröffentlichen.
-
-\subsection{Geschäftslogik Webanwendung}
-
-Dieses Kapitel zeigt, wie man in Etherem über einen Full Node mit dem Netzwerk interagieren kann. Die Webanwendung zeigt lediglich den aktuellen Zustand des Smart Contracts an. Die gesamte Geschäftslogik des Smart Contracts wird vom Etherem Netzwerk ausgeführt. Sollte die Webanwendung aufgrund technischer Fehler ausfallen, hat dies keinerlei Auswirkung auf das eigentliche Spiel.
-
-TODO 
-
-\iffalse
-\begin{enumerate}
-\item Es gibt sowohl test als auch mainnet. Unterscheiden sih nur leicht durch protokoll und port. Teil sehen adressen anders aus. Bei ethereum creiert man sich ein wallet und die adresse ist für beide netzwerke gültig.
-\item Auf dem testents gibts faucts für entwickler, die einem ein wenig testnet cryptowährung überweisen nachdem man ein captcha gelöst hat. Problem öffters mal down.
-\item Bei ethereum hatte ich das typische Java problem, dass die web3jlib eine neuere verion vewendete als der Jboss Wildfly. Daher musste ich den jboss hochziehen
-\item Neuer wildfly benutzt port /127.0.0.1:9990 den auch ein nvidea network service verwendet. den musste ich dann erst abschiessen.
-\end{enumerate}
+Das Gaslimit von einer Million WEI hat ausgereicht und der Smart Contract befindet sich nun in der Blockchain des Ethereum Rinkeby Testnetzes. In einem Blockchain Explorer kann man die Details der vom Full Node erstellten Transaktion\footnote{\url{https://rinkeby.etherscan.io/tx/0x06dce3c460b4caa595c5cc0f81ac78e7c70eeb1e89d3e0e6a017ea88e60dbce1}} und den kompilierten Contract Code\footnote{\url{https://rinkeby.etherscan.io/address/0x25c3136145fbd7f3b9217e58e2fabe3eb1928705\#code}} anschauen.
+\if Alternativ zu Web3J lässt sich der Contract Code mithilfe des Ethereum Clients namens Mist\footnote{\url{https://github.com/ethereum/mist}} veröffentlichen.
 \fi
+
+\subsection{Geschäftslogik Glücksspielanwendung}
+
+Die Glücksspielanwendung zeigt lediglich den aktuellen Zustand des Smart Contracts an. Die gesamte Geschäftslogik des Smart Contracts wird vom Etherem Netzwerk ausgeführt. Sollte die Glücksspielanwendung aufgrund technischer Fehler ausfallen, hat dies keinerlei Auswirkung auf das eigentliche Spiel. Die Geschäftslogik der Glücksspielanwendung fragt lediglich in regelmäßigen Abständen beim Full Node an, ob eine Änderung des Smart Contract Zustands stattgefunden hat. Abbildung \ref{fig:eth_business_logic1} liefert einen ersten Überblick über die dazu verwendeten Klassen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/umsetzung_eth/eth_business_logic1}
+\decoRule
+\caption{Klassendiagramm Ethereum}
+\label{fig:eth_business_logic1}
+\end{figure}
+
+\subsubsection{Core Module}
+Das \code{CryptoNetworkService} Interface wurde um die Methode \code{getSmartContractABI} erweitert. Bei dem  Smart Contract \textbf{A}pplication \textbf{B}inary \textbf{I}nterface handelt es sich um die statische zur Compile-Zeit bestimmte Schnittstellenbeschreibung, die festlegt wie man mit dem Smart Contract interagieren kann. Das Smart Contract ABI wird üblicherweise im JSON Format angegeben.
+
+Zu dem \code{CryptoNetwork} Enum sind nun die zusätzlichen Werte \code{ETH MAIN, ETH RINKEBY, ETH ROPSTEN} hinzugekommen. Über diese Werte kann man steuern, mit welchem Ethereum Netzwerk die Anwendung kommunizieren soll. 
+Die Klassen \code{Pot} und \code{Participant} haben sich nicht verändert.
+\subsubsection{Ethereum Module: AbstractEthereumService}
+
+Die abstrakte Klasse \code{AbstractEthereumService} implementiert die \code{CryptoNetworkService} Schnittstelle. Die Klassen \code{EthMainEjb, EthRopstenEjb und EthRinkebyEjb} legen lediglich über den verwendeten Web3J Service fest, welches Netzwerk die Anwendung ansprechen soll.
+Die abstrakte Klasse \code{AbstractEthereumService} implementiert die vom \code{CryptoNetworkService} Interface geforderten Methoden. Die Methoden \code{getDepositAdress} und \code{getSmartContractABI} geben lediglich die statische Smart Contract Adresse und den Smart Contract ABI JSON String zurück. Die Methoden \code{getCurrentBlockHash, getCurrentBlockHeight} und \code{getCurrentPot} geben gecachte Werte des jeweiligen \code{ExpieryCacheValue} durch den Aufruf der \code{getValue} Methode an die Webanwendung zurück. Die Klassen \code{CurrentBlockHeight, CurrentBlockHash, GasPrice und CurrentPot} erweitern die abstrakte \code{ExpieryCacheValue} Klasse. Diese sorgt dafür, dass die Werte erst nach dem Ablauf einer gewissen konfigurierbaren Zeit (\code{threshold}) automatisch neu beim Full Node angefragt werden. Dies verhindert, dass der Full Node durch zu viele Anfragen überlastet wird. Alle Cache Werte werden in der \code{initialize} Methode der \code{AbstractEthereumService} Klasse initialisiert. 
+\input{CodeSnippets/eth/initialize.tex}
+
+\subsubsection{Ethereum Module: CurrentBlockHash}
+
+Der folgende Code zeigt beispielhaft die die Implementierung des \code{CurrentBlockHash ExpieryCacheValue}.
+
+\input{CodeSnippets/eth/CurrentBlockHash.tex}
+
+In Zeile 6 wird konfiguriert, dass der aktuelle Blockhash maximal alle 5 Sekunden vom Full Node abgefragt wird. In Zeile 25 wird durch den Aufruf der \code{ethGetBlockByNumber} Methode der Block der aktuellen Blocknummer angefragt. Über den Wahrheitswertparameter kann man entweder die gesamten Blockdaten oder nur die Header-Informationen beim Full Node anfragen.
+
+\subsubsection{Ethereum Module: CurrentBlockHeight}
+Die Implementierung des \code{CurrentBlockHeight ExpieryCacheValue} greift auf die folgenden Zeilen Code zurück. Es findet maximal alle 5 Sekunden eine Anfrage an den Full Node statt.
+
+\begin{lstlisting}[basicstyle=\small]
+EthBlockNumber ethBlockNumber = getWeb3jService().ethBlockNumber().send();
+BigInteger currentBlockNumber = ethBlockNumber.getBlockNumber();
+\end{lstlisting}
+
+\subsubsection{Ethereum Module: GasPrice}
+
+Die Implementierung des \code{GasPrice ExpieryCacheValue} greift auf die folgenden Zeilen Code zurück. Es findet maximal alle 60 Sekunden eine Anfrage an den Full Node statt.
+
+\begin{lstlisting}[basicstyle=\small]
+EthGasPrice ethGasPrice = getWeb3jService().ethGasPrice().send();
+BigInteger gasPrice = ethGasPrice.getGasPrice();
+\end{lstlisting}
+
+
+\subsubsection{Ethereum Module: CurrentPot}
+
+Der \code{CurrentPot ExpieryCacheValue} verwendet die Klasse \code{TrustlessGambling} um den Zustand des Smart Contracts zu erfassen und in die Klasse \cdoe{Pot} abzubilden.
 
 \subsection{Grafische Benutzeroberfläche}
 

@@ -1,0 +1,35 @@
+\begin{lstlisting}[basicstyle=\small]
+public class CurrentBlockHash extends ExpiryCacheValue {
+
+  CurrentBlockHeight blockHeight;
+
+  public CurrentBlockHash(Web3j web3j, Credentials credentials, CurrentBlockHeight blockHeight) {
+    super(web3j, credentials, 5 * SECOND);
+    this.blockHeight = blockHeight;
+  }
+
+  /**
+   * refresh if cache value expired. Called automatically by the ExpiryCacheValue.getValue()
+   * method.
+   */
+  @Override
+  protected void refresh() {
+    String blockHash = fetchCurrentBlockHash();
+    if (blockHash != null)
+      setValue(blockHash);
+  }
+
+  private String fetchCurrentBlockHash() {
+    String result = "error";
+    DefaultBlockParameterNumber number = new DefaultBlockParameterNumber(blockHeight.getValue());;
+    try {
+      EthBlock ethBlock = getWeb3jService().ethGetBlockByNumber(number, false).send();
+    result = ethBlock.getBlock().getHash();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+}
+\end{lstlisting}
+

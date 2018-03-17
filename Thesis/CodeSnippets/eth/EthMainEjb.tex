@@ -1,0 +1,17 @@
+\begin{lstlisting}[basicstyle=\small]
+@Startup
+@Singleton
+public class EthMainEJB extends AbstractEthereumService {
+
+  @Override
+  protected Web3j getWeb3jService() {
+    return Web3j.build(new InfuraHttpService("https://mainnet.infura.io/" + UserConfiguration.API_KEY));
+  }
+  
+  @Override
+  public CryptoNetwork getCryptoNetwork() {
+    return CryptoNetwork.ETH_MAIN;
+  }
+}
+\end{lstlisting}
+

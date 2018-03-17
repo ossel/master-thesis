@@ -1,0 +1,16 @@
+\begin{lstlisting}[basicstyle=\small]
+@PostConstruct
+private void initialize() {
+  log.info("#### start " + getClass().getSimpleName() + " network service ####");
+  blockHightCache = new CurrentBlockHeight(getWeb3jService(), getCredentials());
+  log.info("blockHight=" + blockHightCache.getValue().intValue());
+  blockHashCache = new CurrentBlockHash(getWeb3jService(), getCredentials(), blockHightCache);
+  log.info("blockHash=" + blockHashCache.getValue());
+  gasPriceCache = new GasPrice(getWeb3jService(), getCredentials());
+  log.info("gasPrice=" + gasPriceCache.getValue().intValue());
+  currentPotCache = new CurrentPot(getWeb3jService(), getCredentials(), gasPriceCache, blockHightCache,
+  		UserConfiguration.CONTRACT_ADDRESS);
+  log.info("currentPot=" + currentPotCache.getValue().toString());
+}
+\end{lstlisting}
+

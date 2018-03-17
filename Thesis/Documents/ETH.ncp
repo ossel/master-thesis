@@ -167,15 +167,41 @@
       <Entity type="Class">
         <Name>ExpiryCacheValue</Name>
         <Access>Public</Access>
-        <Location left="887" top="414" />
-        <Size width="162" height="179" />
+        <Location left="887" top="369" />
+        <Size width="162" height="196" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private Web3j web3j</Member>
         <Member type="Field">private Credentials credentials</Member>
         <Member type="Field">private long lastRefreshTIme</Member>
         <Member type="Field">private long threshold</Member>
-        <Member type="Method">public void refresh()</Member>
+        <Member type="Method">public void getWeb3jService()</Member>
+        <Member type="Method">public abstract void refresh()</Member>
         <Member type="Method">public Object getValue()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>TrustlessGambling</Name>
+        <Access>Public</Access>
+        <Location left="887" top="625" />
+        <Size width="162" height="366" />
+        <Collapsed>True</Collapsed>
+        <Member type="Field">private String binary</Member>
+        <Member type="Method">public void deploy()</Member>
+        <Member type="Method">public TrustlessGambling load()</Member>
+        <Member type="Method">public BigInteger getNbrOfSlots()</Member>
+        <Member type="Method">public BigInteger getExpectedPotAmount()</Member>
+        <Member type="Method">public BigInteger getPayoutBlockOffset()</Member>
+        <Member type="Method">public BigInteger getNbrOfParticipants()</Member>
+        <Member type="Method">public String [] getPayoutAddresses()</Member>
+        <Member type="Method">public String [] getDepositAddresses()</Member>
+        <Member type="Method">public BigInteger getClosingBlockNumber()</Member>
+        <Member type="Method">public BigInteger getPayoutBlockNumber()</Member>
+        <Member type="Method">public byte [] getPayoutBlockHash()</Member>
+        <Member type="Method">public BitInteger getWinner()</Member>
+        <Member type="Method">public boolean potClosed()</Member>
+        <Member type="Method">public BigInteger getNbrOfMissedPayouts()</Member>
+        <Member type="Method">public void deposit()</Member>
+        <Member type="Method">public void payout()</Member>
         <Modifier>None</Modifier>
       </Entity>
     </Entities>
@@ -259,7 +285,7 @@
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>862</X>
-          <Y>503</Y>
+          <Y>458</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="8" second="12">
@@ -267,16 +293,24 @@
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>862</X>
-          <Y>503</Y>
+          <Y>458</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="9" second="12">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>862</X>
+          <Y>458</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="7" second="12">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>862</X>
+          <Y>458</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Realization" first="11" second="2">
         <StartOrientation>Horizontal</StartOrientation>
@@ -284,6 +318,240 @@
         <BendPoint relativeToStartShape="False">
           <X>335</X>
           <Y>400</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="8" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>784</X>
+          <Y>584</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>966</X>
+          <Y>584</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Web3j</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Comment">
+        <Text>Web3J</Text>
+        <Location left="350" top="76" />
+        <Size width="405" height="366" />
+      </Entity>
+      <Entity type="Class">
+        <Name>ExpiryCacheValue</Name>
+        <Access>Public</Access>
+        <Location left="255" top="858" />
+        <Size width="162" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Web3j web3j</Member>
+        <Member type="Field">private Credentials credentials</Member>
+        <Member type="Field">private long lastRefreshTIme</Member>
+        <Member type="Field">private long threshold</Member>
+        <Member type="Method">public void getWeb3jService()</Member>
+        <Member type="Method">public abstract void refresh()</Member>
+        <Member type="Method">public Object getValue()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GasPrice</Name>
+        <Access>Public</Access>
+        <Location left="36" top="1038" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentPot</Name>
+        <Access>Public</Access>
+        <Location left="36" top="957" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentBlockHash</Name>
+        <Access>Public</Access>
+        <Location left="36" top="881" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CurrentBlockHeight</Name>
+        <Access>Public</Access>
+        <Location left="36" top="812" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Ethereum Module</Text>
+        <Location left="54" top="552" />
+        <Size width="271" height="434" />
+      </Entity>
+      <Entity type="Class">
+        <Name>TrustlessGambling</Name>
+        <Access>Public</Access>
+        <Location left="781" top="76" />
+        <Size width="221" height="366" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private String binary</Member>
+        <Member type="Method">public static void deploy()</Member>
+        <Member type="Method">public TrustlessGambling load()</Member>
+        <Member type="Method">public BigInteger getNbrOfSlots()</Member>
+        <Member type="Method">public BigInteger getExpectedPotAmount()</Member>
+        <Member type="Method">public BigInteger getPayoutBlockOffset()</Member>
+        <Member type="Method">public BigInteger getNbrOfParticipants()</Member>
+        <Member type="Method">public String [] getPayoutAddresses()</Member>
+        <Member type="Method">public String [] getDepositAddresses()</Member>
+        <Member type="Method">public BigInteger getClosingBlockNumber()</Member>
+        <Member type="Method">public BigInteger getPayoutBlockNumber()</Member>
+        <Member type="Method">public byte [] getPayoutBlockHash()</Member>
+        <Member type="Method">public BitInteger getWinner()</Member>
+        <Member type="Method">public boolean potClosed()</Member>
+        <Member type="Method">public BigInteger getNbrOfMissedPayouts()</Member>
+        <Member type="Method">public void deposit()</Member>
+        <Member type="Method">public void payout()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Contract</Name>
+        <Access>Public</Access>
+        <Location left="363" top="110" />
+        <Size width="209" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WalletUtils</Name>
+        <Access>Public</Access>
+        <Location left="363" top="172" />
+        <Size width="209" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public Credentials loadCredentials()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Credentials</Name>
+        <Access>Public</Access>
+        <Location left="579" top="172" />
+        <Size width="162" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public String getAddress()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Web3j</Name>
+        <Access>Public</Access>
+        <Location left="363" top="282" />
+        <Size width="209" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public static Web3j build()</Member>
+        <Member type="Method">public EthGasPrice ethGasPrice()</Member>
+        <Member type="Method">public EthBlockNumber ethBlockNumber()</Member>
+        <Member type="Method">public EthBlock ethGetBlockByNumber()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>HttpService</Name>
+        <Access>Public</Access>
+        <Location left="579" top="301" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InfuraHttpService</Name>
+        <Access>Public</Access>
+        <Location left="579" top="382" />
+        <Size width="162" height="77" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="3" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>10</X>
+          <Y>941</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>10</X>
+          <Y>834</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>116</X>
+          <Y>1027</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>230</X>
+          <Y>947</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>230</X>
+          <Y>947</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>230</X>
+          <Y>947</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>230</X>
+          <Y>946</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>666</X>
+          <Y>357</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>666</X>
+          <Y>371</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>747</X>
+          <Y>135</Y>
         </BendPoint>
       </Relationship>
     </Relationships>

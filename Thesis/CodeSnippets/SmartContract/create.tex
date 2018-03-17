@@ -3,12 +3,12 @@ public void createContract() throws Exception {
   String WALLET_FILENAME = "ethereum.json";
   String WALLET_PASSWORD = "changeit";
   long GAS_LIMIT = 1000000;
+  Web3j web3j = Web3j.build(new InfuraHttpService("https://rinkeby.infura.io/" + UserConfiguration.API_KEY));
+  BigInteger currentGasPrice = web3j.ethGasPrice().send().getGasPrice();
   ClassLoader classLoader = getClass().getClassLoader();
   File walletFile = new File(classLoader.getResource(WALLET_FILENAME).getFile());
   Credentials credentials = WalletUtils.loadCredentials(WALLET_PASSWORD, walletFile.getAbsolutePath());
   System.out.println("Account address = " + credentials.getAddress());
-  Web3j web3j = Web3j.build(new InfuraHttpService("https://rinkeby.infura.io/" + UserConfiguration.API_KEY));
-  BigInteger currentGasPrice = web3j.ethGasPrice().send().getGasPrice();
   TrustlessGambling contract = TrustlessGambling.deploy(web3j, credentials, currentGasPrice, BigInteger.valueOf(GAS_LIMIT)).send();
   String status = contract.getTransactionReceipt().get().getStatus();
   if ("0x1".equals(status)) {
