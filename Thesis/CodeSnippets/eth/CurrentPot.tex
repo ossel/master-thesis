@@ -1,0 +1,53 @@
+\begin{lstlisting}[basicstyle=\small]
+TrustlessGambling contract = TrustlessGambling.load(contractAddress, getWeb3jService(),
+        getCredentials(), gasPrice.getValue(),BigInteger.valueOf(5300000));
+Pot pot = (Pot) this.value;
+int potParticipants = pot.getNbrOfParticipants();
+int actualParaticipants = contract.nbrOfParticipants().send().intValue();
+if (actualParaticipants >= potParticipants) {
+   for (int i = potParticipants; i < actualParaticipants; i++) {
+        String depositAddress = getDepositAddress(contract, i);
+        String payoutAddress = getPayoutAddress(contract, i);
+        pot.addParticipant(new Participant(depositAddress, payoutAddress));
+    }
+} else {
+    // pot has been reopened
+    int winner = contract.winner().send().intValue();
+    byte[] hashBytes = contract.payoutBlockHash().send();
+    String payoutBlockhash = javax.xml.bind.DatatypeConverter.printHexBinary(hashBytes);
+    if (new BigInteger(payoutBlockhash).intValue() == 0) {
+        pot.setState(
+                "Pot closed. Payout() too late. The amount has been added to the next pot.");
+    } else {
+        Block block = new Block("0x" + payoutBlockhash.toLowerCase(), winner);
+        pot.setPayoutBlock(block);
+        pot.setWinner(winner);
+        pot.setState("Pot closed. Winner is " + pot.getWinner().getPayoutAddress());
+    }
+    this.ethereumService.addClosedPot(pot);
+    this.value = createEmptyPot();  
+}
+
+boolean potClosed = contract.potClosed().send();
+if (potClosed) {
+    int closingBlockNumber = contract.closingBlockNumber().send().intValue();
+    int payoutBlockNumber = contract.payoutBlockNumber().send().intValue();
+    pot.setClosingBlockHeight(closingBlockNumber);
+    pot.setPayoutBlockHeight(payoutBlockNumber);
+    int currentBlockNumber = currentBlockHeight.getValue().intValue();
+    if (pot.getPayoutBlockHeight() > currentBlockNumber) {
+        pot.setState("Pot closed. Waiting for payout block.");
+    } else {
+        int diff = currentBlockNumber - pot.getPayoutBlockHeight();
+        int blocksLeft = (256 - diff); // solidity restriction
+        if (blocksLeft > 0) {
+            pot.setState("Pot closed. Call payout() during the next " + blocksLeft
+                    + " blocks. Otherwise the whole amount will be added to the next pot.");
+        } else {
+            pot.setState(
+                    "Pot closed. Payout() too late. The amount has been added to the next pot. Call payout() to open a new pot.");
+        }
+    }
+}
+\end{lstlisting}
+

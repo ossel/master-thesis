@@ -112,7 +112,7 @@ Der folgende Code zeigt beispielhaft die die Implementierung des \code{CurrentBl
 
 \input{CodeSnippets/eth/CurrentBlockHash.tex}
 
-In Zeile 6 wird konfiguriert, dass der aktuelle Blockhash maximal alle 5 Sekunden vom Full Node abgefragt wird. In Zeile 25 wird durch den Aufruf der \code{ethGetBlockByNumber} Methode der Block der aktuellen Blocknummer angefragt. Über den Wahrheitswertparameter kann man entweder die gesamten Blockdaten oder nur die Header-Informationen beim Full Node anfragen.
+In Zeile 6 wird konfiguriert, dass der aktuelle Blockhash maximal alle 5 Sekunden vom Full Node abgefragt wird. In Zeile 18 wird durch den Aufruf der \code{ethGetBlockByNumber} Methode der Block der aktuellen Blocknummer angefragt. Über den Wahrheitswertparameter kann man entweder die gesamten Blockdaten oder nur die Header-Informationen beim Full Node anfragen.
 
 \subsubsection{Ethereum Module: CurrentBlockHeight}
 Die Implementierung des \code{CurrentBlockHeight ExpieryCacheValue} greift auf die folgenden Zeilen Code zurück. Es findet maximal alle 5 Sekunden eine Anfrage an den Full Node statt.
@@ -134,12 +134,26 @@ BigInteger gasPrice = ethGasPrice.getGasPrice();
 
 \subsubsection{Ethereum Module: CurrentPot}
 
-Der \code{CurrentPot ExpieryCacheValue} verwendet die Klasse \code{TrustlessGambling} um den Zustand des Smart Contracts zu erfassen und in die Klasse \code{Pot} abzubilden.
+Der \code{CurrentPot ExpieryCacheValue} verwendet die Klasse \code{TrustlessGambling} um den Zustand des Smart Contracts zu erfassen und in die Klasse \code{Pot} abzubilden. Im Konstruktor des \code{CurrentPot ExpieryCacheValue} wird die Methode \code{createEmptyPot} aufgerufen.
+
+\input{CodeSnippets/eth/createEmptyPot.tex}
+
+Diese Methode fragt den Full Node, wie viele Spieler und welcher Einzahlungsbetrag vom Smart Contract erwartet wird und erzeugt anschließend einen neuen leeren Topf. Der Zustand des Topfs wird durch den folgenden Code jedes mal aktualisiert, wenn die \code{refresh} Methode des \code{ExpieryCacheValue} aufgerufen wird. Dies findet alle 10 Sekunden statt.
+
+\input{CodeSnippets/eth/currentPot.tex}
+
+Der Code unterscheidet zwischen der Anzahl der Teilnehmer, die die Glücksspielanwendung lokal zwischenspeichert(Zeile 4) und der Anzahl Teilnehmer des Datenfeldes des Smart Contracts (Zeile 5). Wenn neue Teilnehmer durch den Aufruf der \code{deposit} Methode in den Smart Contract einzahlen, wird der Topf durch die Zeilen 7 bis 11 aktualisiert. Die Ein- und Auszahlungsadressen der neuen Teilnehmer werden dazu aus den Smart Conract Daten geladen.
+Durch die letzte Einzahlung wechselt der Smart Contract in den Status \code{closed}. Ab diesem Moment wird der Topf durch die Abarbeitung des Codes ab Zeile 30 aktualisiert. Zunächst werden die finalen \code{closingBlockNumber} und \code{payoutBlockNumber} Werte aus den Smart Contract Daten geladen und die \code{currentBlockNumber} durch den Full Node bestimmt. Anschließend wird zwischen 3 Fällen unterschieden:
+\begin{enumerate}
+\item Zeile 38: Der zur Gewinnerauswahl benötigte Block wurde noch nicht gefunden. Dies bedeutet, dass ein Aufruf der \code{payout} Methode des Smart Contracts noch nicht möglich ist.
+\item Zeile 43: Der zur Gewinnerauswahl benötigte Block wurde gefunden und die \code{payout} Methode kann aufgerufen werden. In diesem Fall wird dem Benutzer angezeigt, wie viel Zeit er noch für den Aufruf der \code{payout} Methode hat. 
+\item Zeile 46: Der zur Gewinnerauswahl benötigte Block wurde zwar gefunden, es sind allerdings bereits mehr als 256 Blöcke zwischen der letzten Einzahlung und dem aktuellen Zeitpunkt vergangen. Der Smart Contract wird bei dem Aufruf der \code{payout} Methode nicht auf den Blockhash für die Gewinnerauswahl zugreifen können und den Gewinn zum nächsten Topf hinzufügen.
+\end{enumerate}
+Durch den Aufruf der \code{payout} Methode wird das Datenfeld, das die Anzahl der aktuellen Teilnehmer des Smart Contracts speichert, auf den Wert Null gesetzt. Dies hat zur Folge, dass beim erneuten Aufruf der \code{refresh} Methode des \code{CurrenPot ExpieryCacheValue} der Code von Zeile 13 bis 27 ausgeführt wird. Dieser Code lädt den Gewinner und den \code{payoutBlockHash} aus den Daten des Smart Contracts. Hat der \code{payoutBlockHash} den Wert Null, wurde die \code{payout} Methode zu spät aufgerufen. Nur in diesem Fall gibt es keinen Gewinner. Anschließend wird der aktuelle Topf zur Liste der abgearbeiteten Töpfe hinzugefügt und ein neuer Topf durch den Aufruf der \code{createEmptyPot} Methode erzeugt.
 
 \subsection{Grafische Benutzeroberfläche}
 
 Das folgende Beispiel betrachtet einen frisch auf dem Ethereum Rinkeby Testnetzwerk bereitgestellten Smart Contract.
-
 
 \begin{figure}[H]
 \centering
@@ -148,7 +162,7 @@ Das folgende Beispiel betrachtet einen frisch auf dem Ethereum Rinkeby Testnetzw
 \caption{Leerer Topf}
 \label{fig:ETH_pot_empty}
 \end{figure}
-Abbildung \ref{fig:ETH_pot_empty} zeigt einen Topf mit 3 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 1000 WEI (kleinste Ether Einheit) an den Smart Contract senden. Genau wie bei Bitcoin wird dem Nutzer ein QR-Code angezeigt, der die Übermittlung der Daten in einen Smartphone Client erleichtert. Das \textbf{E}thereum \textbf{I}mprovement \textbf{P}roposal Nummer 681\citep{eip21} legt die Kodierung der Daten fest.
+Abbildung \ref{fig:ETH_pot_empty} zeigt einen Topf mit 3 freien Plätzen. Um dem Spiel beizutreten, muss der Spieler den Betrag von 1000 WEI (kleinste Ether Einheit) an den Smart Contract senden. Genau wie bei Bitcoin wird dem Nutzer ein QR-Code angezeigt, der die Übermittlung der Daten in einen Smartphone Client erleichtert. Das \textbf{E}thereum \textbf{I}mprovement \textbf{P}roposal Nummer 681\cite{eip21} legt die Kodierung der Daten fest.
 Folgende Daten sind in dem QR Code enthalten:\\ ''ethereum:0x9b04da87b9bedafaee8f02c53bb5e290dce0cf2d/deposit?value=1000''. In diesem Beispiel verwenden wir für die Interaktion mit dem Netzwerk keinen Smartphone Client sondern die Webanwendung namens ''My Ether Wallet''\footnote{\url{https://www.myetherwallet.com/\#contracts}}. Diese benötigt für die Interaktion mit dem Smart Contract sowohl die Contract Adresse als auch das \textbf{A}pplication \textbf{B}inary \textbf{I}nterface.
 
 

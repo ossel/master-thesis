@@ -1,0 +1,10 @@
+\begin{lstlisting}[basicstyle=\small]
+private Pot createEmptyPot() throws Exception{
+    TrustlessGambling contract = TrustlessGambling.load(contractAddress, getWeb3jService(),
+            getCredentials(), gasPrice.getValue(), BigInteger.valueOf(5300000));
+    int nbrOfSlots = contract.NBR_OF_SLOTS().send().intValue();
+    long amount = contract.EXPECTED_POT_AMOUNT().send().longValue();
+    return new Pot(nbrOfSlots, amount);
+}
+\end{lstlisting}
+

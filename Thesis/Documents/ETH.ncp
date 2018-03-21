@@ -41,6 +41,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -162,6 +164,7 @@
         <Member type="Method">public abstract Web3j getWeb3jService()</Member>
         <Member type="Method">public abstract CryptoNetwork getCryptoNetwork()</Member>
         <Member type="Method">private void initialize()</Member>
+        <Member type="Method">public void addClosedPot()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
@@ -239,6 +242,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -253,6 +258,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -263,18 +270,24 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -321,6 +334,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -479,6 +494,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -493,6 +510,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
