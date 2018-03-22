@@ -1,6 +1,7 @@
 \section{Konzept} \label{eth_konzept}
 
-Der Ablauf des Spiels ist mit dem Ablauf aus dem Bitcoin Kapitels nahezu identisch. Die Unterschiede sind, dass das gesamte Spiel vom Nutzer initiiert wird und die Glücksspielanwendung ausschließlich den Spielstatus anzeigt. Dies führt dazu, dass die Spieler keinerlei Vertrauen in die Glücksspielanwendung setzen müssen. Der Ablauf des Spiels lässt sich durch den folgenden Zustandsautomat beschreiben.
+Der Ablauf des Spiels ist mit dem Ablauf aus dem Bitcoin Kapitels nahezu identisch. Die Unterschiede sind, dass das gesamte Spiel vom Nutzer initiiert wird und die Glücksspielanwendung ausschließlich den Spielstatus anzeigt. Dies führt dazu, dass die Spieler keinerlei Vertrauen in die Glücksspielanwendung setzen müssen. Statt aufgrund leichter Überprüfbarkeit die letzte numerische Stelle des Blockhashs für die Gewinnerauswahl zu nutzen, kann bei Ethereum der gesamten Blockhash zur Gewinnerauswahl genutzt werden. Der Spieler kann aufgrund der Konsensregeln darauf vertrauen, dass das Ethereum Netzwerk die Ausführung des Contract Codes korrekt durchführt und die modulo Funktion zur Gewinnerauswahl korrekt berechnet. Die Nutzung des gesamten Blockhashs als Zufallsquelle ermöglicht Töpfe beliebiger Größe. 
+Der Ablauf des Spiels lässt sich durch den folgenden Zustandsautomat beschreiben.
 
 \begin{figure}[H]
 \centering
