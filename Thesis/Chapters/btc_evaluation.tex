@@ -110,7 +110,15 @@ Bobtail: A Proof-of-Work Target that Reduces Blockchain Mining Variance (Brian N
 https://stanford2017.scalingbitcoin.org/presentations
 
 \subsection{Blockchain Forks} \label{sssec:btc_fork}
-Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain ketten sind nun gleich lang. Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist. Forks kommen bei Bitcoin durch die hohe Hashrate des Netzwerks und die somit sehr hohe Difficulty recht selten vor. Die Webseite\footnote{\url{https://blockchain.info/orphaned-blocks}} zeigt an, wie oft gültige Blöcke gefunden werden, die es nicht in die Blockchain schaffen.
+Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain-Ketten sind nun gleich lang.
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/btc/fork_normal}
+\decoRule
+\caption{Bitcoin Fork}
+\label{fig:fork_normal}
+\end{figure}
+Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist. Forks kommen bei Bitcoin durch die hohe Hashrate des Netzwerks und die somit sehr hohe Difficulty recht selten vor. Die Webseite\footnote{\url{https://blockchain.info/orphaned-blocks}} zeigt an, wie oft gültige Blöcke gefunden werden, die es nicht in die Blockchain schaffen.
 
 \subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass sein Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und man somit eine höhere Transaktionsgebühr zahlen muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.
