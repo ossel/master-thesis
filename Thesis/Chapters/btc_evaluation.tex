@@ -1,55 +1,61 @@
 \section{Evaluation}
 \subsection{Prüfung der Anforderungen}\label{btc_evaluation}%Anforderungserfüllung}
 
-Dieser Abschnitt behandelt in wie weit das beschriebene Konzept die in Kapitel 1 aufgelisteten Anforderungen erfüllt. Die jeweilige Anforderung wird zunächst wiederholt und anschließend genauer untersucht.
+Dieser Abschnitt behandelt in wie weit das beschriebene Konzept die in \ref{anforderungen} aufgelisteten Anforderungen erfüllt. Die jeweilige Anforderung wird zunächst wiederholt und anschließend genauer untersucht.
 
 \subsubsection{1) Transparente Einzahlungen}
-Die Einzahlung jedes Endnutzers ist für jeden anderen Endnutzer nachprüfbar.\\\\
+\textit{Die Einzahlung jedes Endnutzers ist für jeden anderen Endnutzer nachprüfbar.}\\\\
 Diese Anforderung ist erfüllt, da jede Transaktion in der lokalen Datenbank jedes Peet-to-Peer Netzwerkteilnehmers aufgezeichnet wird. 
-Auf der Webseite \cite{blockchain_info} kann man die Bitcoin Blockchain mithilfe eines sogenannten Blockchain-Exploers durchsuchen. Mit diesem Werkzeug kann man die Blöcke und die darin enthaltenen Transaktionen untersuchen. Nutzt man den Explorer einer Drittpartei, muss man darauf vertrauen, dass dieser auch den ''wahren'' Status der Blockchain anzeigt. Um dieses Risiko zu vermeiden kann jeder Teilnehmer mithilfe eines eigenen Bitcoin Full Node am Netzwerk teilnehmen. Dieser speichert die gesamte Blockchain und prüft alle Transaktionen und Blöcke gegen die Konsensregeln.\\
+Auf der Webseite \cite{blockchain_info} kann man die Bitcoin Blockchain mithilfe eines sogenannten Blockchain-Explorers durchsuchen. Mit diesem Werkzeug kann man die Blöcke und die darin enthaltenen Transaktionen untersuchen. Nutzt man den Explorer einer Drittpartei, muss man darauf vertrauen, dass dieser auch den ''wahren'' Status der Blockchain anzeigt. Um dieses Risiko zu vermeiden kann jeder Teilnehmer mithilfe eines eigenen Bitcoin Full Node am Netzwerk teilnehmen. Dieser speichert die gesamte Blockchain und prüft alle Transaktionen und Blöcke gegen die Konsensregeln.\\
 Der Bitcoin Full Node stellt eine API bereit, über die man den aktuellen Status der Blockchain abfragen kann. Der Befehl \textbf{getblockchaininfo} liefert den aktuellen Zustand der Blockchain zurück. Dieser beinhaltet die Blocknummer des neusten Blocks und dessen Blockhash. Der Befehl \textbf{gettransaction} gefolgt von der Transaktions-ID liefert Details über eine Transaktion. Die Webseite \cite{btc_api} dokumentiert diese Schnittstelle detailliert. 
 
 \subsubsection{2) Gewinnerauswahl durch Zufallsfaktor}
-Die Auswahl des Gewinners ist von einem zufälligen Faktor abhängig, auf den weder die Anwendung noch die Endnutzer einen Einfluss haben.\\\\
+\textit{Die Auswahl des Gewinners ist von einem zufälligen Faktor abhängig, auf den weder die Anwendung noch die Endnutzer einen Einfluss haben.}\\\\
 Diese Anforderung wird nur bedingt erfüllt, da ein Teilnehmer des Peer-to-Peer Netzwerks sowohl ein Spieler als auch ein Miner sein kann. Ist dies der Fall besteht die Möglichkeit, dass der Miner einen validen Blockhash verwirft, sobald er merkt, dass er durch diesen Blockhash nicht zum Gewinner des Geldtopfes wird. Verwirft der Teilnehmer einen Blockhash, riskiert er den dadurch ausgeschütteten Blockreward. Ein solcher Angriff ist für einen Miner nur rentabel, falls die Spieleinsätze des Geldtopfes den Blockreward um ein vielfaches übersteigen.
 Betrachten wir dazu das Bitcoin Netzwerk Anfang Februar 2018. Der Preis pro Bitcoin beträgt 8000 Euro. Der Mining Reward liegt bei 12,5 Bitcoin pro Block\footnote{Dieses Beispiel vernachlässigt die durch das Minen des Blocks erhaltenen Transaktionsgebühren.}. Für das Lösen eines gültigen Blocks erhält ein Miner somit 100000 Euro. Angenommen ein Miner besitzt 20 Prozent der Hashrate des gesamten Bitcoin-Netzwerks und nimmt an einem Topf mit 2 Personen teil. Dies bedeutet, dass sowohl der Miner als auch der andere Teilnehmer eine Gewinnwahrscheinlichkeit von 0,5 für einen zufälligen Blockhash haben.
-Da der Miner eine Hashrate von 20 Prozent hat, liegt die Wahrscheinlichkeit das der Miner den nächsten Block findet bei 0,2. Falls er den gefundene Blockhash verwirft, da er durch diesen seinen Glücksspieleinsatz verlieren würde, muss er es schaffen vor einem anderen Miner einen weiteren Blockhash zu berechnen. Ansonsten verliert er den Blockreward. Die Wahrscheinlichkeit das der Miner zwei gültige Blockhashs hintereinander findet, liegt bei 0,2 * 0,2 = 0,04 und ist somit verschwindend gering.
+Mit einer Wahrscheinlichkeit von 0,8 findet ein anderer Miner des Bitcoin Netzwerks und der Miner kann den Ausgang des Spiels nicht beeinflussen. Mit einer Wahrscheinlichkeit von 0,2 findet der Miner den Block und kann entscheiden, ob er den Block entweder veröffentlicht oder verwirft. Entscheidet er sich den Block zu verwerfen, hat er ab diesem Moment wieder die Wahrscheinlichkeit von 0,2, da es sich beim Mining um einen Gedächtnislosen Prozess handelt. Die Wahrscheinlichkeit, dass der Miner einen zweiten gültigen Block findet ist daher sehr gering und liegt bei $0,2 * 0,2 = 0,04$. Auch dieser zweite gültige Block führt nur in 50 Prozent der Fälle zu einem Gewinn des Topfes.
+\todo{Erwartungswert berechnen.}
+%Die Berechnung des Erwartungswerts gibt eine Aussage ab welchem Einsatz es sich für den Miner lohnt einen gültigen Block zu verwerfen um den Ausgang des Spiels zu manipulieren. Sei $E$ der Einsatz des Topfes. 
+
+%Da der Miner eine Hashrate von 20 Prozent hat, liegt die Wahrscheinlichkeit das der Miner den nächsten Block findet bei 0,2. Falls er den gefundene Blockhash verwirft, da er durch diesen seinen Glücksspieleinsatz verlieren würde, muss er es schaffen vor einem anderen Miner einen weiteren Blockhash zu berechnen. Ansonsten verliert er den Blockreward. Die Wahrscheinlichkeit das der Miner zwei gültige Blockhashs hintereinander findet, liegt bei 0,2 * 0,2 = 0,04 und ist somit verschwindend gering.
 
 \subsubsection{3) Nachprüfbarkeit des Zufallsfaktor}
-Jeder Endnutzer kann die Echtheit des zufälligen Faktors eigenständig nachprüfen.\\\\
+\textit{Jeder Endnutzer kann die Echtheit des zufälligen Faktors eigenständig nachprüfen.}\\\\
 Da das Verfahren der Gewinnerauswahl im Vorhinein festgelegt ist und die Reihenfolge der Einzahlungstransaktionen in der Blockchain festgeschrieben steht, kann jeder Teilnehmer die Berechnung des Gewinners eigenständig nachvollziehen. Der Blockhash der die Grundlage für die Gewinnerauswahl liefert kann durch die Verwendung eines Bockchain-Explorers oder eines Full Nodes nachgeprüft werden. 
 \subsubsection{4) Transparente Auszahlungen}
-Die Auszahlung an den Gewinner muss transparent und somit für jeden Endnutzer nachprüfbar sein.\\\\
+\textit{Die Auszahlung an den Gewinner muss transparent und somit für jeden Endnutzer nachprüfbar sein.}\\\\
 Genau wie die Einzahlungen ist auch die Auszahlung für jeden Spieler mithilfe eines Blockchain-Explorers oder eines Bitcoin Full Nodes möglich. Jeder Teilnehmer kann somit für alle bereits abgeschlossenen Spiele nachprüfen ob die Anwendung sich korrekt verhalten und eine Auszahlung getätigt hat. 
 \subsubsection{5) Fairheit des Spiels}
-Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt.\\\\
+\textit{Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt}.\\\\
 Die Zuordnung der Spieler auf die Gewinnzahlen ist durch die Reihenfolge der Transaktionen in der Blockchain festgeschrieben. Eine nachträgliche Veränderung dieser Reihenfolge ist weder durch die Nutzer, noch durch die Glücksspielanwendung möglich.\footnote{Eine Veränderung der Reihenfolge ist nur durch einen sogenannten Blockchain-Fork möglich. Kapitel \ref{sssec:btc_fork} erörtert welche Auswirkungen dies auf die Glücksspielanwendung hat.}
 
 Damit keiner der Spieler einen Vorteil hat, muss jeder Topf-Platz die gleiche Gewinnwahrscheinlichkeit haben.
-Dies ist gegeben, falls a) jeder Teilnehmer die gleiche Anzahl Gewinnzahlen zugeordnet bekommt und b) falls die möglichen Blockhash-Werte für die Gewinnerauswahl gleichverteilt sind.\\
+Dies ist gegeben, falls jeder Teilnehmer die gleiche Anzahl Gewinnzahlen zugeordnet bekommt und falls das Auftreten jeder Gewinnzahl die gleiche Wahrscheinlichkeit besitzt. Durch die Einschränkung der Topfgröße auf 2, 5 und 10 Teilnehmer bekommt jeder Spieler durch die Modulo Funktion genau gleich viele Gewinnzahlen zugeordnet. Abschnitt \ref{btc_distribution} zeigt durch eine Monte Carlo Simulation, dass die letzte Dezimalziffer der Werte der von Bitcoin verwendeten SHA-256 Hashfunktion gleichverteilt sind. Somit ist das Auftreten jeder Gewinnzahl gleich wahrscheinlich und die Anforderung erfüllt.
 
-a) Die Gewinnerauswahl kann entweder wie im Konzept beschrieben durch den gesamten Blockhash-Wert oder wie im Beispiel auf Basis der letzten Blockziffer vorgenommen werden.
+\section{Gewinnerauswahl}\label{btc_gewinnerauswahl}
+Die Gewinnerauswahl kann entweder durch den gesamten Blockhash-Wert oder auf Basis der letzten Blockziffer vorgenommen werden.
 Beide Methoden haben Vor- und Nachteile.\\ Variante eins erlaubt beliebige Topfgrößen, ist dafür aber schwieriger für den Endnutzer zu verifizieren. Die Verifizierung erfordert die Konvertierung des Blockhashs ins Dezimalsystem und eine Modulo-Rechnung einer sehr große Zahl.\\ Variante zwei ist dagegen leicht zu verifizieren, erlaubt allerdings nur die Topfgrößen zwei, fünf und zehn. Bei der Topfgröße von zwei sind beiden Spielern fünf Gewinnzahlen zugeordnet. Bei der Topfgröße von fünf besitzt jeder Teilnehmer genau 2 Gewinnzahlen. Bei einer Topfgröße von zehn wird jedem Teilnehmer genau eine Gewinnzahl zugeordnet. 
 Nimmt man hingegen eine Topfgröße von 1,3,4,6,7,8 und 9 führt dies dazu das manche Teilnehmer eine signifikant höhere Gewinnchance haben.
 Bei der Topfgröße von 3 sind die Gewinnzahlen durch die Modulo-Funktion folgendermaßen verteilt:
 \begin{itemize}
-\item Spieler 1 hat die Gewinnzahlen 0, 3 und 9.
-\item Spieler 2 hat die Gewinnzahlen 1 und 4.
+\item Spieler 1 hat die Gewinnzahlen 0, 3, 6 und 9.
+\item Spieler 2 hat die Gewinnzahlen 1, 7 und 4.
 \item Spieler 3 hat die Gewinnzahlen 2, 5 und 8.
 \end{itemize}
-Somit haben Spieler 1 und 3 eine Gewinnwahrscheinlichkeit von $\frac{3}{10}$, Spieler 2 hingegen nur eine Gewinnwahrscheinlichkeit von $\frac{2}{10}$.
+Somit haben Spieler 1 hat eine Gewinnwahrscheinlichkeit von $\frac{4}{10}$, Spieler 2 und 3 hingegen nur eine Gewinnwahrscheinlichkeit von $\frac{3}{10}$.
 
 Es kommt also vor, dass eine Teilmenge der Spieler genau eine Gewinnzahl mehr als der Rest der Teilnehmer hat.
-Nimmt man den gesamten Blockhash zur Gewinnerauswahl ist die dadurch entstehende Ungerechtigkeit verschwindend gering und kann vernachlässigt werden. Dies ist der Fall, da die aus dem Blockhash resultierende Dezimalzahl in der Praxis sehr groß ist und jeder Spieler somit mehrere Millionen von Gewinnzahlen hat.\\
+Nimmt man den gesamten Blockhash zur Gewinnerauswahl ist die dadurch entstehende Ungerechtigkeit verschwindend gering und kann vernachlässigt werden. Dies ist der Fall, da die aus dem Blockhash resultierende Dezimalzahl in der Praxis sehr groß ist und jeder Spieler somit mehrere Millionen von Gewinnzahlen hat.
 
-b) Der Blockhash eines Blocks wird durch die verwendete kryptographische Hashfunktion der Kryptowährung festgelegt. Die Verteilung der Werte ist somit von der verwendeten kryptographische Hashfunktion abhängig.\\
+\section{Verteilung der Blockhash-Werte}\label{btc_distribution}
+Der Blockhash eines Blocks wird durch die verwendete kryptographische Hashfunktion der Kryptowährung festgelegt. Die Verteilung der Werte ist somit von der verwendeten kryptographische Hashfunktion abhängig.\\
 Eine kryptografische Hashfunktion ist eine stark kollisionsresistente Einweg-Hashfunktion.\\
 Eine Hashfunktion h heißt
 \begin{itemize}
-\item Einwegfunktion genau dann, wenn es schwierig ist, zu gegebenem $_{Y0}$ ein $_{X0}$ zu finden mit $h(x_{0}) = y_{0}$.
-\item schwach kollisionsresistent genau dann, wenn es schwierig ist, zu einem gegebenen $x$ ein $x'$ zu finden mit $h(x) = h(x')$.
-\item stark kollisionsresistent genau dann, wenn es schwierig ist, $x$ und $x'$ zu finden
-mit $x \neq xx$ und $h(x) = h(xx)$.
+\item \textit{Einwegfunktion} genau dann, wenn es schwierig ist, zu gegebenem $_{Y0}$ ein $_{X0}$ zu finden mit $h(x_{0}) = y_{0}$.
+\item \textit{schwach kollisionsresistent} genau dann, wenn es schwierig ist, zu einem gegebenen $x$ ein $x' \neq x$ zu finden mit $h(x) = h(x')$.
+\item \emph{stark kollisionsresistent} genau dann, wenn es schwierig ist, $x$ und $x'$ zu finden
+mit $x \neq x'$ und $h(x) = h(x')$.
 \end{itemize}Die Eigenschaften der starken Kollisionsresistenz und der Einwegfunktion sagen nichts über die Verteilung der ausgegebenen Werte aus. Bei der Auswahl der Kryptowährung muss also gesondert auf die Verteilung der verwendete Hashfunktion geachtet werden. Sollte die verwendete kryptographische Hashfunktion keine Gleichverteilung liefern, kann der Blockhash dennoch den nötigen Zufall liefern indem dieser mit einer geeigneten Hashfunktion erneut gehasht wird.\\\\
 Bitcoin verwendet die kryptographische Hashfunktion SHA256.
 Die folgende Monte-Carlo-Simulation zeigt, dass die Resultate der SHA256 gleichverteilt sind.
@@ -82,44 +88,9 @@ result[9] = 100284
 \label{fig:verteilung_sha256}
 \end{minipage}
 
-\pdfcomment{Hier dann noch die Verteilung der echten Bitcoin Blockchain angeben.}
+\todo{Hier dann noch die Verteilung der echten Bitcoin Blockchain angeben.}
 %Somit ist das Spiel nur unter der Annahme fair, dass die Zahl zur Gewinnerauswahl gleichverteilt ist.
-
-\subsection{Betrugsmöglichkeiten}
-
-Dieser Abschnitt betrachtet in wie weit die Glücksspielanwendung potentielle Spieler betrügen kann, sollte sie gehackt und zu ausschließlich diesem Zweck modifiziert werden.
-Die Anwendung hat die volle Kontrolle darüber welche Ausgabe sie dem Benutzer anzeigt. Sie hat allerdings keine Kontrolle über den Status der Blockchain. 
-
-Die Anwendung könnte beispielsweise anzeigen, dass der Topf nach der Einzahlung durch einen Spieler immer noch leer ist. Die Transaktion auf die Einzahlungsadresse existiert dann zwar in der Blockchain allerdings reagiert die Anwendung nicht entsprechend. Dies hat zur Folge, dass jeder Spieler der eine Einzahlung tätigt, sein Geld verliert. Allerdings merkt der Benutzer dies und kann somit eine weitere Verwendung der Anwendung unterlassen. Ein solch plumper Manipulationsversuch fällt somit direkt auf.
-
-Ein weitere Betrugsmöglichkeit ist, dass die Glücksspielanwendung sich bis zur Gewinnerauswahl korrekt verhält, dann allerdings keine Auszahlung tätigt. Alle einzahlenden Spieler merken den Betrug, verlieren aber dennoch ihr Geld.
-
-Bei beiden vorgestellten Betrugsversuchen fällt der Betrug immer mindestens einem Spieler auf. Die Verwendung einer solchen Anwendung macht nur Sinn, falls man den Betreiber des Services kennt und diesen im Zweifel juristisch haftbar machen kann.\\
-Das folgende Kapitel betrachtet wie sogenannte ''Smart Contract''s dieses Problem lösen. Ein Smart Contract erlauben es die Geschäftslogik der Glücksspielanwendung in die Blockchain zu schreiben. Die Geschäftslogik wird somit nicht mehr von der Anwendung, sondern von jedem Teilnehmer des Peer-to-Peer Netzwerks ausgeführt. 
-
-
-\subsection{Angriff durch Miner}
-
-\pdfcomment{Überlegungen wie man es nicht machen kann:Blockhash 100 mal hashen bringt nicht. Miner findet Hash und macht erst danach die Arbeit. Die 5 letzten Blockhashs mit einbeziehen bringt auch nichts, weil es dann nur auf den 5. letzten Block ankommt}
-
-\subsection{Blockchain Mining Varianz}
-Der Begriff Blockchain Mining Varianz beschreibt den Umstand, dass die Miner des Netzwerkes entweder Glück oder Pech bei der Suche nach dem nächsten gültigen Blockhash haben können. Bei Bitcoin gibt es daher nicht genau alle 10 Minuten einen neuen Block, sonder durchschnittlich alle 10 Minuten. Für die Glücksspielanwendung bedeutet dies, dass die Zeit zwischen der letzten Einzahlung und der Auswahl des Gewinners variieren kann. In der Praxis kommt es vor, dass man 30 Minuten und mehr auf den nächsten Block warten muss. Dies ist für den Spieler eine recht lange Zeit. Der Forscher XXX schlägt in dem Proposal namens Bobtail ein Verfahren vor, dass die Blockchain Mining Varianz stark verringert. Dieser Vorschlag ist bisher allerdings noch nicht in den Bitcoin Sourcecode eingeflossen.
-Eine andere Möglichkeit die Wartezeit für den Spieler zu verringern ist es eine  Kryptowährung mit einer geringeren Blockzeit zu verwenden. Beispiele hierfür sind LiteCoin\footnote{\url{https://litecoin.com/}} mit einer Blockzeit von 2,5 Minuten, die auf Privatsphäre spezialisierte Währung Monero\footnote{\url{https://getmonero.org/}} mit einer Blockzeit von 2 Minuten und Ethereum\footnote{\url{https://www.ethereum.org/}} mit einer Blockzeit von 12 Sekunden. Bei einer geringen Blockzeit kommt es häufiger zu sogenannten Blockchain Forks.
-TODO check
-Bobtail: A Proof-of-Work Target that Reduces Blockchain Mining Variance (Brian N. Levine)
-https://stanford2017.scalingbitcoin.org/presentations
-
-\subsection{Blockchain Forks} \label{sssec:btc_fork}
-Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain-Ketten sind nun gleich lang.
-\begin{figure}[H]
-\centering
-\includegraphics[width=1\linewidth]{Figures/btc/fork_normal}
-\decoRule
-\caption{Bitcoin Fork}
-\label{fig:fork_normal}
-\end{figure}
-Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist. Forks kommen bei Bitcoin durch die hohe Hashrate des Netzwerks und die somit sehr hohe Difficulty recht selten vor. Die Webseite\footnote{\url{https://blockchain.info/orphaned-blocks}} zeigt an, wie oft gültige Blöcke gefunden werden, die es nicht in die Blockchain schaffen.
-
+\\
 \subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass sein Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und man somit eine höhere Transaktionsgebühr zahlen muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.
 
@@ -155,3 +126,31 @@ Abbildung \ref{fig:btc_txn_input_output} zeigt welche Inputs und Outputs für di
 \end{figure}
 
 Da die Anwendung für jeden Benutzer eine eigene Adresse generiert, muss die Anwendung in der Auszahlungstransaktion für jede Input Adresse eine gültige Signatur angeben. Abbildung \ref{fig:btc_txn_input_output_scripts} zeigt, dass die Transaktion dadurch wesentlich größer wird. Hier könnte in Zukunft die Verwendung sogenannter Schnorr Multi-Signaturen aushelfen. Durch diese lassen sich alle Signaturen der Inputs durch eine einzige Signatur ersetzen. \citep{schnorr_sig}
+
+
+\subsection{Blockchain Mining Varianz}
+Der Begriff Blockchain Mining Varianz beschreibt den Umstand, dass die Miner des Netzwerkes entweder Glück oder Pech bei der Suche nach dem nächsten gültigen Blockhash haben können. Bei Bitcoin gibt es daher nicht genau alle 10 Minuten einen neuen Block, sonder durchschnittlich alle 10 Minuten. Für die Glücksspielanwendung bedeutet dies, dass die Zeit zwischen der letzten Einzahlung und der Auswahl des Gewinners variieren kann. In der Praxis kommt es vor, dass man 30 Minuten und mehr auf den nächsten Block warten muss. Dies ist für den Spieler eine recht lange Zeit. Das Proposal namens Bobtail\cite{bobtail} liefert ein Verfahren, das die Blockchain Mining Varianz stark verringert. Dieser Vorschlag ist bisher allerdings noch nicht in den Bitcoin Sourcecode eingeflossen.
+Eine andere Möglichkeit die Wartezeit für den Spieler zu verringern ist es eine  Kryptowährung mit einer geringeren Blockzeit zu verwenden. Beispiele hierfür sind LiteCoin\footnote{\url{https://litecoin.com/}} mit einer Blockzeit von 2,5 Minuten, die auf Privatsphäre spezialisierte Währung Monero\footnote{\url{https://getmonero.org/}} mit einer Blockzeit von 2 Minuten und Ethereum\footnote{\url{https://www.ethereum.org/}} mit einer Blockzeit von 12 Sekunden. Bei einer geringen Blockzeit kommt es häufiger zu sogenannten Blockchain Forks.
+
+\subsection{Blockchain Forks} \label{sssec:btc_fork}
+Blockchain Forks entstehen, falls 2 Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain-Ketten sind nun gleich lang.
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/btc/fork_normal}
+\decoRule
+\caption{Bitcoin Fork}
+\label{fig:fork_normal}
+\end{figure}
+Der nächste gefundene Block entscheidet, auf welche Kette sich das Netzwerk einigt\footnote{Unter der Annahme, dass es nicht erneut zu einem Blockchain Fork kommt.}. Die Bitcoin Konsensregeln legen fest, dass die Teilnehmer des Netzwerks immer der längsten Kette, die somit am meisten Proof-of-Work beinhaltet, folgen. Dies erlaubt es jedem Bitcoin Knoten, ohne Trusted Third Party festzustellen, welche Version der Blockchain die echte ist. Forks kommen bei Bitcoin durch die hohe Hashrate des Netzwerks und die somit sehr hohe Difficulty recht selten vor. Die Webseite\footnote{\url{https://blockchain.info/orphaned-blocks}} zeigt an, wie oft gültige Blöcke gefunden werden, die es nicht in die Blockchain schaffen.
+
+\subsection{Betrugsmöglichkeiten}
+
+Dieser Abschnitt betrachtet in wie weit die Glücksspielanwendung potentielle Spieler betrügen kann, sollte sie gehackt und zu ausschließlich diesem Zweck modifiziert werden.
+Die Anwendung hat die volle Kontrolle darüber welche Ausgabe sie dem Benutzer anzeigt. Sie hat allerdings keine Kontrolle über den Status der Blockchain. 
+
+Die Anwendung könnte beispielsweise anzeigen, dass der Topf nach der Einzahlung durch einen Spieler immer noch leer ist. Die Transaktion auf die Einzahlungsadresse existiert dann zwar in der Blockchain allerdings reagiert die Anwendung nicht entsprechend. Dies hat zur Folge, dass jeder Spieler der eine Einzahlung tätigt, sein Geld verliert. Allerdings merkt der Benutzer dies und kann somit eine weitere Verwendung der Anwendung unterlassen. Ein solch plumper Manipulationsversuch fällt somit direkt auf.
+
+Ein weitere Betrugsmöglichkeit ist, dass die Glücksspielanwendung sich bis zur Gewinnerauswahl korrekt verhält, dann allerdings keine Auszahlung tätigt. Alle einzahlenden Spieler merken den Betrug, verlieren aber dennoch ihr Geld.
+
+Bei beiden vorgestellten Betrugsversuchen fällt der Betrug immer mindestens einem Spieler auf. Die Verwendung einer solchen Anwendung macht nur Sinn, falls man den Betreiber des Services kennt und diesen im Zweifel juristisch haftbar machen kann.\\
+Das folgende Kapitel betrachtet wie sogenannte Smart Contracts dieses Problem lösen. Ein Smart Contract erlauben es die Geschäftslogik der Glücksspielanwendung in die Blockchain zu schreiben. Die Geschäftslogik wird somit nicht mehr von der Anwendung, sondern von jedem Teilnehmer des Peer-to-Peer Netzwerks ausgeführt.
