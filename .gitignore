@@ -1,6 +1,7 @@
 *.aux
 *.bbl
 *.log
+*.tdo
 */Thesis.lof
 */Thesis.lot
 */Thesis.blg
