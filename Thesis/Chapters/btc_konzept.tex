@@ -4,7 +4,7 @@ Die folgenden Schritte beschreiben den Finanzfluss zwischen den Teilnehmern und 
 
 \begin{enumerate}
 \item Im ersten Schritt eröffnet die Anwendung ein neues Spiel in dem es $N$ freie Plätze und einen leeren Geldtopf gibt.
-\item Sobald ein Spieler am Spiel teilnehmen möchte, generiert die Anwendung eine neue Empfangsadresse\footnote{Man könnte auch allen Spieler die gleiche Einzahlungsadresse anzeigen. Dies hätte den Nachteil, dass man nicht weiß von welchem Spieler welche Einzahlungstransaktion ist. Die Anwendung könnte dem Spieler somit kein Benachrichtigung anzeigen sobald er an einem Topf teilnimmt.} und zeigt diese dem Spieler an.
+\item Sobald ein Spieler am Spiel teilnehmen möchte, generiert die Anwendung eine neue Empfangsadresse\footnote{Man könnte auch allen Spieler die gleiche Einzahlungsadresse anzeigen. (siehe \ref{sssec:Auszahlungstransaktion})} und zeigt diese dem Spieler an.
 \item Der Spieler verwendet die Wallet Software seiner Wahl um eine Transaktion zu erstellen, die den Einsatz an die angezeigte Empfangsadresse überweist. Die Wallet Software signiert die Transaktion und leitet sie über die mit ihr verbundenen Nachbarn an das Peer-to-Peer Netzwerk weiter.
 \item Ein Miner empfängt die Transaktion und nimmt sie in den nächsten Block auf.
 \item Der Miner findet den zu seinem Block passenden Proof-of-Work-Hash und schickt den Block an das Netzwerk.
