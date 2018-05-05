@@ -6,22 +6,22 @@ Die folgenden Schritte beschreiben den Finanzfluss zwischen den Teilnehmern und 
 \item Im ersten Schritt eröffnet die Anwendung ein neues Spiel in dem es $N$ freie Plätze und einen leeren Geldtopf gibt.
 \item Sobald ein Spieler am Spiel teilnehmen möchte, generiert die Anwendung eine neue Empfangsadresse\footnote{Man könnte auch allen Spieler die gleiche Einzahlungsadresse anzeigen. (siehe \ref{sssec:Auszahlungstransaktion})} und zeigt diese dem Spieler an.
 \item Der Spieler verwendet die Wallet Software seiner Wahl um eine Transaktion zu erstellen, die den Einsatz an die angezeigte Empfangsadresse überweist. Die Wallet Software signiert die Transaktion und leitet sie über die mit ihr verbundenen Nachbarn an das Peer-to-Peer Netzwerk weiter.
-\item Ein Miner empfängt die Transaktion und nimmt sie in den nächsten Block auf.
+\item Sowohl die Anwendung als auch die Miner empfangen die Transaktion. Die Anwendung zeigt dem Nutzer über die GUI an, dass die Transaktion zwar erhalten wurde, allerdings noch nicht bestätigt wurde. Die Miner des Netzwerks nehmen die Transaktion in ihren nächsten Block auf\footnote{Natürlich nur unter der Annahme, dass sie die Höhe der Transaktionsgebühr als angemessen empfinden.}.
 \item Der Miner findet den zu seinem Block passenden Proof-of-Work-Hash und schickt den Block an das Netzwerk.
 \item Die Applikation empfängt den Block und merkt, dass im Block eine Transaktion auf die in Schritt 2 generierte Empfangsadresse enthalten ist. Die Applikation prüft die Höhe des Transaktionsbetrag und leitet anschließend die vom Spieler kontrollierte Auszahlungsadresse aus der Transaktion ab. 
 \item  Die restlichen $N-1$ Teilnehmer überweisen ebenfalls den geforderten Betrag auf die ihnen angezeigte Empfangsadresse.
 \item  Sobald die letzte Transaktion in einen validen Block aufgenommen wurde, zählt die Reihenfolge in der die Transaktionen in der Blockchain stehen. Die Reihenfolge steht somit fest und kann nicht mehr nachträglich verändert werden. Der Geldtopf ist nun mit einem Betrag von $N*X$ Krytowährungseinheiten gefüllt und wird geschlossen. Der Block nach dem Block, in dem die letzte Einzahlungstransaktion eingegangen ist, wird zur Gewinnerauswahl genutzt. Die Anwendung merkt sich die Blocknummer dieses Blocks.
 %\item Die Anwendung signiert nun die Reihenfolge der Teilnehmer und deren Auszahlungsadressen und schreibt die resultierende Signatur mit einer Transaktion in die Blockchain.
 \item Die Anwendung und die Teilnehmer warten darauf, dass der nächste Block von einem Miner gefunden wird. Alle Miner des Peer-to-Peer Netzwerks versuchen schnellstmöglich einen passenden Blockhash zu finden um den Blockreward zu erhalten. Ein Miner gewinnt dieses Rennen und teilt dem Netzwerk den neu gefundenen Block mit.
-\item Die Anwendung empfängt den nächsten Block und ermittelt durch diesen den Gewinner. Die Berechnung erfolgt auf Basis der letzten Dezimalstelle $d_{last}$ des Blockhashs\footnote{Man kann an dieser Stelle auch den gesamten Blockhash als Grundlage der Gewinnerauswahl nehmen. Die daraus resultierenden Vor- und Nachteile werden in Abschnitt \ref{btc_gewinnerauswahl} erörtert.}. Durch die Berechnung von $d_{last}$  modulo $N$ resultiert eine Zahl $G \in \{0,...,N-1\}$, die den Gewinner festlegt. Der Spieler, der die $G+1$te Einzahltransaktion gesendet hat, gewinnt den Geldtopf.
-\item Die Anwendung erstellt eine Transaktion, die alle $N*X$ Krytowährungseinheiten des Geldtopfs an die Auszahlungsadresse des Gewinners überweist, und sendet diese an das Netzwerk.
+\item Die Anwendung empfängt den nächsten Block und ermittelt durch diesen den Gewinner. Die Berechnung erfolgt auf Basis der letzten Ziffer\footnote{Man kann an dieser Stelle auch den gesamten Blockhash als Grundlage der Gewinnerauswahl nehmen. Die daraus resultierenden Vor- und Nachteile werden in Abschnitt \ref{btc_gewinnerauswahl} erörtert.} $d_{last}$ des Blockhashs in Hexadezimaldarstellung. Durch die Berechnung von $d_{last}$  modulo $N$ resultiert eine Zahl $G \in \{0,...,N-1\}$, die den Gewinner festlegt. Der Spieler, der die $G+1$te Einzahltransaktion gesendet hat, gewinnt den Geldtopf\footnote{Es handelt sich zu diesem Zeitpunk erst um den vorläufigen Gewinner des Spiels, da es zu einem Blockchain Fork (siehe Abschnitt \ref{sssec:btc_fork}) kommen kann. }.
+\item Sobald ein Anwendung einen Block empfängt, der auf den Block für die Gewinnerauswahl aufbaut, beginnt die Auszahlung des Gewinns. Die Anwendung erstellt dazu eine neue Transaktion, die alle $N*X$ Krytowährungseinheiten des Geldtopfs an die Auszahlungsadresse des Gewinners überweist und sendet diese an das Netzwerk.
 \item Die Wallet Software des Gewinners, empfängt die Transaktion und informiert ihn darüber, dass er den gesamten Betrag des Topfes erhalten hat.
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%
 % Bitcoin Beispiel %
 %%%%%%%%%%%%%%%%%%%%
-\vspace{1cm}
+\vspace{0.75cm}
 Im folgenden Beispiel wird einen Topf mit 5 Teilnehmern, die Kryptowährung Bitcoin und einen Einzahlungsbetrag von 0,1 Bitcoin betrachtet. Dieses Beispiel verdeutlicht sowohl die Interaktion der verschiedenen Teilnehmer des Peer-to-Peer Netzwerks, als auch die Veränderung des Status der Blockchain.
 
 \vspace{1cm}
@@ -96,7 +96,7 @@ In diesem Beispiel findet der Miner einen gültigen Blockhash, leitet den Block 
 \label{fig:konzept6}
 \end{minipage}
 \begin{minipage}{0.45\textwidth}
-Die Glücksspielanwendung empfängt den Block Nummer 11 und überprüft ob er im Einklang mit den Konsensregeln ist. Dies ist der Fall. Somit wird die lokale Blockchain Datenbank um einen Block erweitert. Die Glücksspielanwendung hat somit den Einsatz des ersten Spielers erhalten. Aus der Einzahlungstransaktion des Spielers leitet die Anwendung die Auszahlungsadresse \textbf{1Axjc9} des Spielers ab. 
+Die Glücksspielanwendung empfängt den Block Nummer 11 und überprüft, ob er im Einklang mit den Konsensregeln ist. Dies ist der Fall. Somit wird die lokale Blockchain Datenbank um einen Block erweitert. Die Glücksspielanwendung hat somit den Einsatz des ersten Spielers erhalten. Sie zeigt nun die vorher noch unbestätigte Transaktion als bestätigt an und fügt den Spieler zum Topf hinzu. Aus der Einzahlungstransaktion des Spielers leitet die Anwendung die Auszahlungsadresse \textbf{1Axjc9} des Spielers ab. 
 \end{minipage}
 
 \vspace{1cm}
@@ -145,7 +145,7 @@ Alle Miner des Netzwerkes versuchen nun gleichzeitig so schnell wie möglich den
 \label{fig:konzept10}
 \end{minipage}
 \begin{minipage}{0.45\textwidth}
-Die Anwendung empfängt Block 14 und prüft ihn gegen die Konsensregeln. Der Block ist valide. Daher verwendet die Anwendung den im Block enthaltenen Blockhash um den Gewinner des Geldtopfes zu ermitteln. Statt des gesamten Blockhashs verwendet die Anwendung nur die letzte Ziffer des Blockhashs zur Gewinnerauswahl. Dies hat den Vorteil, dass die Teilnehmer die Korrektheit der Gewinnerauswahl leichter eigenständig nachprüfen können.
+Die Anwendung empfängt Block 14 und prüft ihn gegen die Konsensregeln. Der Block ist valide. Daher verwendet die Anwendung den im Block enthaltenen Blockhash um den Gewinner des Geldtopfes zu ermitteln. Statt des gesamten Blockhashs verwendet die Anwendung nur die letzte Ziffer des Blockhashs in Hexadezimaldarstellung zur Gewinnerauswahl. Dies hat den Vorteil, dass die Teilnehmer die Korrektheit der Gewinnerauswahl leichter eigenständig nachprüfen können.
 Da die letzte numerische Stelle des Blockhashs 10 verschiedene Werte annehmen kann, ordnet die Anwendung jedem der 5 Teilnehmer mittels der Modulo 5 Funktion zwei Gewinnzahlen zu.
 \end{minipage}
 
@@ -158,7 +158,7 @@ Dadurch ergibt sich die Verteilung der Gewinnzahlen folgendermaßen:
 \item Spieler 4 mit Adresse 1xw9vC gewinnt bei 3 und 8,
 \item Spieler 5 mit Adresse 1xw9vE gewinnt bei 4 und 9.
 \end{itemize}
-Jeder Teilnehmer besitzt nun eine Gewinnwahrscheinlichkeit von 1/5. Block Nummer 14 hat den Blockhash \textbf{00000001A5}\footnote{In der Praxis ist jeder Blockhash genau 64 Zeichen lang (Hexadezimalsystem), da Bitcoin die SHA-256 Hashfunktion verwendet. Aufgrund der Länge ist es praktisch unmöglich, dass der Blockhash ausschließlich aus Buchstaben besteht.}. Die zur Gewinnerauswahl benutze Ziffer ist somit die 5. Da 5 modulo 5 den Wert 0 ergibt, gewinnt Spieler 1 mit der Adresse \textbf{1xw9vA}.
+Jeder Teilnehmer besitzt nun die gleiche Gewinnwahrscheinlichkeit\footnote{Dies gilt nur unter der Annahme, dass der Wert für die Gewinnerauswahl gleichverteilt ist. Dies wird in Abschnitt \ref{btc_distribution} genauer erläutert.} von $\frac{1}{5}$. Block Nummer 14 hat den Blockhash \textbf{000000015A}\footnote{In der Praxis ist jeder Blockhash genau 64 Zeichen lang (Hexadezimalsystem), da Bitcoin die SHA-256 Hashfunktion verwendet. Aufgrund der Länge ist es praktisch unmöglich, dass der Blockhash ausschließlich aus Buchstaben besteht.}. Die zur Gewinnerauswahl benutze Ziffer ist somit die 5. Da 5 modulo 5 den Wert 0 ergibt, gewinnt Spieler 1 mit der Adresse \textbf{1xw9vA}.
 
 \vspace{1cm}
 \begin{minipage}{0.55\textwidth}
@@ -181,5 +181,5 @@ Die Anwendung erstellt nun eine Transaktion die alle Spieleinsätze an die Ausza
 \label{fig:konzept12}
 \end{minipage}
 \begin{minipage}{0.45\textwidth}
-Das Smartphone von Spieler 1 empfängt die Transaktion gegebenenfalls noch bevor sie von einem Miner in einen validen Block aufgenommen wurde. Die Wallet Software zeigt die Transaktion erst als unbestätigt an. Sobald sie durch die Aufnahme in Block 15 bestätigt wurde, gilt sie für die Wallet Software als bestätigt.
+Das Smartphone von Spieler 1 empfängt die Transaktion gegebenenfalls noch bevor sie von einem Miner in einen validen Block aufgenommen wurde. Die Wallet Software zeigt die Transaktion erst als unbestätigt an. Sobald sie durch die Aufnahme in Block 16 bestätigt wurde, gilt sie für die Wallet Software als bestätigt.
 \end{minipage}

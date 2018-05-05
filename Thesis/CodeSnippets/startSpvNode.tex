@@ -1,6 +1,6 @@
-\begin{lstlisting}[basicstyle=\small] %or \tiny or \small or \footnotesize etc.
+\begin{lstlisting}[basicstyle=\small]
 @PostConstruct
-private void startSvpNode() {
+private void startSpvNode() {
     log.info("#### Start Bitcoin SPV Node  ####");
     currentPot = new Pot(2, 100000L);
     File walletDir = CoreUtil.getWalletDirectory();
