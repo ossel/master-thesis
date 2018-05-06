@@ -12,7 +12,7 @@ Um Ethereum nutzen zu können braucht man einen Account. Ethereum Accounts beste
 \begin{itemize}
 \item Einer 20 Byte langen Adresse,
 \item einem Kontostand in Ether(siehe Abschnitt \ref{eth_ether}),
-\item einem Nonce-Wert der sicherstellt, dass Transaktionen nur einmal ausgeführt werden können,
+\item einem Nonce-Wert\footnote{Es handelt sich um einen dynamischen Wert, der hochgezählt wird um sicherzustellen, dass Transaktionen nur einmal ausgeführt werden.},
 \item Smart Contract Code (optional),
 \item und Speicherplatz (optional).
 \end{itemize} In Ethereum gibt es zwei Arten von Accounts. Die erste Art ist eine Adresse, die, wie bei Bitcoin, durch den Besitz des privaten Schlüssels kontrolliert wird. Diese Art von Account wird durch eine Wallet Software verwaltet. Die zweite Art ist ein  Contract Account, der durch den Smart Contract Code kontrolliert wird. Der Smart Contract Code verwaltet eigenständig den Kontostand des Accounts und verhält sich genau so, wie der Programmierer es festgelegt hat.
@@ -37,12 +37,12 @@ Bei Nachrichten handelt es sich um virtuelle Objekte, die im Gegensatz zu Transa
 \subsection{Ether}\label{eth_ether} 
 Ether ist die Kryptowährung des Ethereum Netzwerks. Sie entsteht wie bei Bitcoin durch Mining und wird benutzt, um für Transaktionsgebühren und die Ausführung von Contract Code zu bezahlen. Die kleinste Einheit der Ethereum Währung nennt sich WEI. Ein Ether entspricht $10^{18}$ WEI. Ether bildet durch die Zuhilfenahme des Gas-Werts und Gas-Preis den anti Spam Schutz des Ethereum Netzwerks.
 \subsubsection{Gas-Wert}
-Da Smart Contracts Schleifen beinhalten und andere Smart Contracts durch Nachrichten aufrufen können, muss sichergestellt werden, dass die Ausführung terminiert. Da es für den Sender der Transaktion schwierig, in manchen Fällen sogar unmöglich\footnote{Beispielsweise wenn der nächste Block eine Transaktion enthält, die bewirkt, dass die eigentlichen Transaktion ein unterschiedlicher Code-Pfad durchlaufen wird.} ist, die Anzahlt Schritte der Ausführung im Vorhinein zu wissen, legt der Absender durch den Gas-Wert die maximale Anzahl Rechenschritte fest, die die Transaktion bei der Ausführung dauern darf.
+Da Smart Contracts Schleifen beinhalten und andere Smart Contracts durch Nachrichten aufrufen können, muss sichergestellt werden, dass die Ausführung terminiert. Da es für den Sender der Transaktion schwierig, in manchen Fällen sogar unmöglich\footnote{Beispielsweise wenn der nächste Block eine Transaktion enthält, die eine Zustandsänderung bewirkt, sodass von der eigentlichen Transaktion ein unerwarteter Code-Strang durchlaufen wird.} ist, die Anzahlt Schritte der Ausführung im Vorhinein zu wissen, legt der Absender durch den Gas-Wert die maximale Anzahl Rechenschritte fest, die die Transaktion bei der Ausführung dauern darf.
 \subsubsection{Gas-Preis}
 Durch den Gas-Preis gibt der Sender einer Transaktion an, wie viel Ether er pro Rechenschritt bereit ist zu bezahlen. Die Ausführung einer Transaktion kann einen Ethereum Account somit um maximal \code{Gas-Wert * Gas-Preis} Ether belasten.
 
 \subsection{Ethereum Virtual Machine}\label{eth_evm} 
-In der Ethereum Virtual Machine wird der Smart Contract Code ausgeführt. Sie arbeitet die Anweisungen des Contracts der Reihe nach ab und bricht ab, falls der Gas-Wert nicht für die Ausführung der Transaktion ausreicht. Durch das sequenzielle Abarbeiten der Transaktionen eines Blocks wird der Systemzustand nach und nach von der Ethereum Virtual Machine angepasst.
+In der \textbf{E}thereum \textbf{V}irtual \textbf{M}achine wird der Smart Contract Code ausgeführt. Wird ein Smart Contract durch eine Transaktion aufgerufen, arbeitet sie die Anweisungen des Contracts der Reihe nach ab und verändert dadurch den Zustand des Ethereum Accounts. Reicht der Gas-Wert der Transaktion nicht für die Ausführung aller Anweisungen aus, bricht die EVM ab und macht die Anpassungen des Systemzustands (bis auf die Zahlung der Transaktionsgebühr) rückgängig. Durch das sequenzielle Abarbeiten der Transaktionen eines Blocks wird der Systemzustand nach und nach von der Ethereum Virtual Machine angepasst.
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\linewidth]{Figures/eth/ETH_txn_statetransformation}
@@ -59,7 +59,7 @@ Die Ethereum Virtual Machine geht bei der Abarbeitung einer Transaktion folgende
 \item Es wird die maximal fällige Transaktionsgebühr durch das Multiplizieren des Gas-Werts mit dem Gas-Preis berechnet. Anschließend wird geprüft, ob der Account des Senders genug Ether besitzt, um die berechnete Transaktionsgebühr zu bezahlen. Ist dies der Fall wird die maximale Transaktionsgebühr vom Sender-Account abgezogen. Anderenfalls wird die Bearbeitung der Transaktion abgebrochen. 
 \item Nun wird der Gas-Wert der Transaktion um einen gewissen Betrag jedes Transaktionsbyte verringert. Der Sender zahlt auf diese Weise für den Platz, den die Transaktion in der Blockchain einnimmt.
 \item Der Ether Wert der Transaktion wird vom Sender auf den Empfänger Account überwiesen. Falls der Empfänger Account noch nicht existiert wird er angelegt. Wird der Empfänger Account durch einen Smart Contract verwaltet, wird der Contract Code entweder vollständig ausgeführt oder aufgrund fehlenden Gas abgebrochen. 
-\item Falls der Sender nicht genug Ether oder verbleibendes Gas für die Überweisung besitzt, werden alle bisherigen Veränderungen des Systemzustands rückgängig gemacht. In diesem Fall wird ausschließlich die Transaktionsgebühr  auf den Account des Miners überschrieben.
+\item Falls der Sender nicht genug Ether oder verbleibendes Gas für die Überweisung besitzt, werden alle bisherigen Veränderungen des Systemzustands rückgängig gemacht. Die Transaktionsgebühr wird auf den Account des Miners überschrieben.
 \item Im erfolgreichen Fall werden die Gebühren des verbleibenden Gas an den Sender zurückerstattet und die Gebühren des verbrauchten Gas an den Account des Miners überschrieben.
 \end{enumerate}
 
@@ -80,15 +80,15 @@ Die in Abbildung \ref{fig:ETH_statetransition_example} betrachtete Transaktion r
 \item Der Transaktionsbetrag von 10 Ether wird vom Sender Account \code{14c5f88a} auf den Account \code{bb75a980} überwiesen.
 \item Nun wird der Conract Code des Empfängeraccounts ausgeführt:\\ \code{if !contract.storage[tx.data[0]]: contract.storage[tx.data[0]] = tx.data[1]}\\
 Da der Speicherplatz des Contracts an Stelle 2 noch nicht verwendet ist, wird  der Wert \code{CARLIE} aus den Transaktionsdaten abgespeichert. Unter der Annahme, dass diese Operationen 150 Gas verbrauchen ergibt sich ein verbleibender Gas-Wert von \code{1150 -150 = 1000}. 
-\item Die verbleibenden \code{1000 * 0,001 = 1} Ether werden auf den Account des Senders zurücküberwiesen und die Anpassung des Systemzustands ist fertig\footnote{Im resultierenden Systemzustand aus Abbildung \ref{fig:ETH_statetransition_example} fehlt die an den Miner gezahlte Transaktionsgebühr von 1 Ether. Diese zahlt sich der Miner wie in Abbildung \ref{fig:ETH_txn_statetransformation} gezeigt in der letzten Transaktion zusammen mit den restlichen Transaktionsgebühren des Blocks aus.}.
+\item Die verbleibenden \code{1000 * 0,001 = 1} Ether werden auf den Account des Senders zurücküberwiesen und die Anpassung des Systemzustands ist fertig\footnote{Im resultierenden Systemzustand aus Abbildung \ref{fig:ETH_statetransition_example} fehlt die an den Miner gezahlte Transaktionsgebühr von 1 Ether. Diese zahlt sich der Miner wie in Abbildung \ref{fig:ETH_txn_statetransformation} gezeigt im letzten Schritt zusammen mit den restlichen Transaktionsgebühren des Blocks aus.}.
 \end{enumerate}
 
 \subsection{Unterschiede zu Bitcoin}\label{eth_grundlagen_btc_diff} 
 \subsubsection{Turing-Vollständigkeit}
 Bitcoin besitzt intern auch eine Skript-Sprache zur Ausführung von Transaktionen. Diese ist im Gegensatz zu Ethereum bewusst eingeschränkt und nicht turingmächtig. Da man keine Schleifen programmieren kann, führt dies dazu, dass man Code mehrfach wiederholen muss. Dies führt dazu, dass Transaktionen die Smart Contracts ausdrücken in Bitcoin mehr Platz in der Blockchain einnehmen. Ethereum muss sich aufgrund der Turing-Vollständigkeit um das Halteproblem kümmern. Durch die Angabe eines maximalen Gas-Werts stellt Ethereum sicher, dass die Ausführung einer Transaktion spätestens nach einer gewissen Zeit abgebrochen wird. 
 \subsubsection{Betrags-Blindheit}
-Der Betrag, der einer Bitcoin-Adresse zugeschrieben wird, kann entweder nur ganz oder gar nicht ausgegeben werden. Dies ist bei Ethereum nicht der Fall. Der Nonce-Wert des Ethereum Accounts verhindert, dass eine Transaktion nicht zweimal ausgeführt werden kann.
+Der Betrag, der einer Bitcoin-Adresse zugeschrieben wird, kann entweder nur ganz oder gar nicht ausgegeben werden. Dies ist bei Ethereum nicht der Fall. Der Nonce-Wert des Ethereum Accounts verhindert, dass eine Transaktion zweimal ausgeführt werden kann. Dies erlaubt es in Transaktionen nur einen Bruchteil des Ethereum Account Guthabens zu versenden.
 \subsubsection{Blockchain-Blindheit}
 In Bitcoin kann man bei der Ausführung der Transaktionen nicht auf Blockchain Daten wie Beispielsweise vorherige Blockhash-Werte, Zeitstempel oder None-Werte zugreifen. Eine Transaktion, die einen vorherigen Blockhash ausließt und als Zufallsquelle verwendet ist mit der Bitcoin Skript-Sprache nicht möglich.
 \subsubsection{Fehlender Zustand}
-Die Ethereum Accounts ermöglichen es einen weitaus komplexeren Systemzustand abzubilden. Bei Bitcoin besteht der Systemzustand lediglich aus der Menge aller Adressen, die Bitcoins besitzen.
+Die Ethereum Accounts ermöglichen es einen weitaus komplexeren Systemzustand abzubilden. Bei Bitcoin besteht der Systemzustand lediglich aus der Menge aller Adressen und der Menge an Bitcoin, die diese besitzen.

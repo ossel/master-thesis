@@ -4,19 +4,19 @@
 Dieser Abschnitt behandelt in wie weit das beschriebene Konzept die in Anschnitt \ref{anforderungen} aufgelisteten Anforderungen erfüllt. Die jeweilige Anforderung wird zunächst wiederholt und anschließend genauer untersucht.
 
 \subsubsection{1) Transparente Einzahlungen}
-Die Einzahlung jedes Endnutzers ist für jeden anderen Endnutzer nachprüfbar.\\\\
+\textit{Die Einzahlung jedes Endnutzers ist für jeden anderen Endnutzer nachprüfbar.}\\\\
 Einzahlungen geschehen genau wie bei Bitcoin innerhalb von Transaktionen, die in die Blockchain geschrieben werden. Diese Anforderung ist also auch im Falle von Ethereum erfüllt.
 \subsubsection{2) Gewinnerauswahl durch Zufallsfaktor}
-Die Auswahl des Gewinners ist von einem zufälligen Faktor abhängig, auf den weder die Anwendung noch die Endnutzer einen Einfluss haben.\\\\
+\textit{Die Auswahl des Gewinners ist von einem zufälligen Faktor abhängig, auf den weder die Anwendung noch die Endnutzer einen Einfluss haben.}\\\\
 Genau wie bei Bitcoin findet die Gewinnerauswahl basierend auf einem aus dem Proof-of-Work Blockhash statt. Die in Kapitel \ref{btc_evaluation} betrachtete Analyse gilt somit genau so für Ethereum außer, dass der Mining Reward 3 Ether beträgt und durchschnittlich alle 12 Sekunden ausgeschüttet wird. In Zukunft plant Ethereum von einem Proof-of-Work Algorithmus auf einen Proof-of-Stake Algorithmus umzusteigen. Proof-of-Stake und die daraus resultierenden Auswirkungen werden in Kapitel \ref{pos} betrachtet.
 \subsubsection{3) Nachprüfbarkeit des Zufallsfaktor}
-Jeder Endnutzer kann die Echtheit des zufälligen Faktors eigenständig nachprüfen.\\\\
+\textit{Jeder Endnutzer kann die Echtheit des zufälligen Faktors eigenständig nachprüfen.}\\\\
 Der zur Gewinnerauswahl verwendete Blockhash ist zum Zeitpunkt der Auszahlung bereits in der öffentlichen Blockchain verankert und kann somit überprüft werden.
 \subsubsection{4) Transparente Auszahlungen}
-Die Auszahlung an den Gewinner muss transparent und somit für jeden Endnutzer nachprüfbar sein.\\\\
+\textit{Die Auszahlung an den Gewinner muss transparent und somit für jeden Endnutzer nachprüfbar sein.}\\\\
 Die Auszahlung wird durch die vom Nutzer initiierte \code{payout} Transaktion ausgelöst und vom Smart Contract vorgenommen. Das Verfahren der Auszahlung ist durch den unveränderlichen Smart Contract Code in Stein gemeißelt. Die Konsensregeln und die dahinter liegende Spieltheorie garantieren, dass dieser auch genau so ausgeführt wird. Obwohl die \code{payout} Transaktion nicht direkt Geld auf die Auszahlungsadresse des Gewinners überweist, kann der Endnutzer dennoch sicher sein, dass eine Auszahlung stattgefunden hat, wenn die \code{payout} Transaktion wie in Abbildung \ref{fig:contract_payout_txn} im Status \code{success} vorliegt.
 \subsubsection{5) Fairheit des Spiels}
-Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt.\\\\
+\textit{Jeder Endnutzer besitzt die gleiche Gewinnwahrscheinlichkeit und niemand wird benachteiligt.}\\\\
 Damit keiner der Spieler einen Vorteil hat, muss jeder Topf-Platz die gleiche Gewinnwahrscheinlichkeit haben.
 Dies ist gegeben, falls jeder Teilnehmer a) die gleiche Anzahl Gewinnzahlen zugeordnet bekommt und b) falls die möglichen Blockhash-Werte für die Gewinnerauswahl gleichverteilt sind.
 
@@ -68,12 +68,12 @@ result[9] =  99298
 \end{minipage}
 
 \subsection{Sicherheit von Smart Contracts}
-Bei Smart Contracts handelt es sich um öffentliche, für jeden ausführbare und unveränderliche Software. Beinhaltet diese einen Software Fehler, ist dieser ausnutzbar und kann nicht behoben werden. Smart Contracts verwalten in der Regel Geld oder Token, die einen finanziellen Wert repräsentieren. Bei der Entwicklung eines Smart Contracts ist somit oberste Vorsicht geboten. Das Beispiel von the DAO zeigt, zu welchen katastrophalen Folgen Sicherheitslücken in Smart Contracts führen können.
+Bei Smart Contracts handelt es sich um öffentliche, für jeden ausführbare und unveränderliche Software. Beinhaltet diese einen Software Fehler, ist dieser ausnutzbar und kann nicht behoben werden. Smart Contracts verwalten in der Regel Geld oder Token, die einen finanziellen Wert repräsentieren. Bei der Entwicklung eines Smart Contracts ist somit oberste Vorsicht geboten. \todo{Hier zuerst: Durch einen kritischen Fehler im the DAO smart Contratct wurden Millionen verloren... dann erst details was the DAO ist.vllt als fussnote} Das Beispiel von the DAO zeigt, zu welchen katastrophalen Folgen Sicherheitslücken in Smart Contracts führen können.
 Bei the DAO handelt es sich um einen von Christoph Jentzsch programmierten und am 20ten April 2016 auf der Ethereum Blockchain veröffentlicht Smart Contract\footnote{\url{https://etherscan.io/address/0xbb9bc244d798123fde783fcc1c72d3bb8c189413\#code}}.
 The DAO ist ein Kapitalfond, der es sich zur Aufgabe gemacht hat in Blockchain Technologie zu investieren. Bei dem initialen 28zig tägigen Crowdsale wurden mehr als 150 Millionen Dollar von über 11 Tausend Investoren eingesammelt. Investoren haben Kapital in Form von Ether eingezahlt und als Gegenleistung eine entsprechende Anzahl Token als eine Art Stimmrecht erhalten. Investitionsentscheidungen dieser \textbf{d}ezentralen \textbf{a}utonomen \textbf{O}rganisation werden mithilfe des Smart Contracts durch einen dezentral erarbeiteten Konsens getroffen. Durch das Ausnutzen eines nicht trivialen Fehlers im Smart Contract Code schaffte es ein Hacker einen großen Teil des Kapitals an eine von ihm kontrollierte Adresse auszuzahlen. Eine genaue Beschreibung des Angriffes findet man unter \cite{eth_dao_hack}.
 
 Die Solidity Dokumentation \footnote{\url{https://solidity.readthedocs.io/en/develop/security-considerations.html}} listet eine Reihe von Beispielen, die die Sicherheit von Smart Contracts betreffen. Entwickler sollten sich dieser bewusst sein, bevor sie einen Smart Contract veröffentlichen der Geld verwaltet.
-
+\todo{Sicherheitsaspekt auf eigenen Smart Contract beziehen.}
 
 \if
 Hier dann noch darauf eingehen, dass man auf keinen Fall bock.timestamp verwenden sollte, da Miner auf diesen einen direkten Zugriff haben können.

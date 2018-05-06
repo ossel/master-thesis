@@ -17,7 +17,7 @@ Die folgenden Codestücke beschreiben den \code{TrustlessGambling} Smart Contrac
 \subsubsection{Datenmodell}
 Das folgenden Codestücke zeigt den Rahmen, alle Variablen und den Konstruktor des Smart Contracts.
 \input{CodeSnippets/SmartContract/datenmodell.tex}
-Zeile 1 definiert in welcher Version der Solidity Programmiersprache der Smart Contract geschrieben ist. Dies muss vom Compiler bei der Übersetzung zu Bytecode berücksichtigt werden. Zeile 2 legt den Namen des Smart Contracts fest. Über die beiden Konstanten in Zeile 4 und 5 kann man die Anzahl Spieler, und den von jedem Spieler erwarteten Einzahlungsbetrag festlegen. Die in Zeile 6 festgelegte Konstante legt fest, welcher Block ab der letzten Einzahlungstransaktion den Gewinner festlegt. Diese Werte können nach der Bereitstellung des Smart Contracts nicht mehr verändert werden. Die Variablen von Zeile 8 bis Zeile 16 werden vom Smart Contract manipuliert und speichern den Zustand des aktuellen Topfes. Zeile 8 speichert wie viele Teilnehmer bereits eingezahlt haben. Zeile 9 und 10 speichern die Ein- und Auszahlungsadressen der aktuellen Teilnehmer. Die Zeilen 11 bis 14 speichern alle für die Gewinnerauswahl benötigten Werte. Zeile 15 definiert über den Wahrheitswert \code{potClosed}, ob der Topf offen ist und Einzahlungen stattfinden können, oder ob der Topf geschlossen ist. Der Nutzen des Wertes aus Zeile 16 wird im Rahmen des ''Auszahlungen'' Abschnitts erklärt. Zeile 18 bis 22 beinhalten den einmalig bei der Bereitstellung des Smart Contracts aufgerufenen Konstruktor. Alle Variablen des Smart Contracts sind zur Schaffung maximaler Transparenz mit dem Schlüsselwort \code{public} markiert. Dies erlaubt es den Nutzern, alle Werte des Smart Contract abzurufen.
+Zeile 1 definiert in welcher Version der Solidity Programmiersprache der Smart Contract geschrieben ist. Dies muss vom Compiler bei der Übersetzung zu Bytecode berücksichtigt werden. Zeile 2 legt den Namen des Smart Contracts fest. Über die beiden Konstanten in Zeile 4 und 5 kann man die Anzahl Spieler, und den von jedem Spieler erwarteten Einzahlungsbetrag festlegen. Die in Zeile 6 festgelegte Konstante legt fest, welcher Block ab der letzten Einzahlungstransaktion den Gewinner festlegt. Diese Werte können nach der Bereitstellung des Smart Contracts nicht mehr verändert werden. Die Variablen von Zeile 8 bis Zeile 16 werden vom Smart Contract manipuliert und speichern den Zustand des aktuellen Topfes. Zeile 8 speichert wie viele Teilnehmer bereits eingezahlt haben. Zeile 9 und 10 speichern die Ein- und Auszahlungsadressen\footnote{Die Einzahlungsadressen werden nur zur Anzeige für die GUI-Anwendung abgespeichert und sind für das eigentliche Spiel irrelevant. Das weglassen dieser würde zu günstigeren Transaktionskosten für Einzahlungstransaktionen führen.} der aktuellen Teilnehmer. Die Zeilen 11 bis 14 speichern alle für die Gewinnerauswahl benötigten Werte. Zeile 15 definiert über den Wahrheitswert \code{potClosed}, ob der Topf offen ist und Einzahlungen stattfinden können, oder ob der Topf geschlossen ist. Der Nutzen des Wertes aus Zeile 16 wird im Rahmen des ''Auszahlungen'' Abschnitts erklärt. Zeile 18 bis 22 beinhalten den einmalig bei der Bereitstellung des Smart Contracts aufgerufenen Konstruktor. Alle Variablen des Smart Contracts sind zur Schaffung maximaler Transparenz mit dem Schlüsselwort \code{public} markiert. Dies erlaubt es den Nutzern, alle Werte des Smart Contract abzurufen.
 
 \subsubsection{Einzahlungen}
 Einzahlungen finden über die beiden \code{deposit} Methoden statt. Diese sind mit dem Schlüsselwort \code{payable} markiert. Dies bedeutet, dass Transaktionen einen Ether-Betrag beim aufruf dieser Methoden angeben können.
@@ -27,10 +27,10 @@ Nutzt der Spieler die Methode aus Zeile 1, wir als Auszahlungsadresse einfach di
 \subsubsection{Auszahlungen}\label{sssec:eth_nbrOfMissedPayouts}
 Auszahlungen finden durch den Aufruf der \code{payout} Methoden statt. Diese ist nicht mit dem Schlüsselwort \code{payable} markiert und erwartet keinen Ether-Betrag beim Aufruf.
 \input{CodeSnippets/SmartContract/auszahlungen.tex}
-Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die aktuelle Blocknummer bereits größer als die Blocknummer des Blocks für die Gewinnerauswahl ist. Sind diese Bedingungen erfüllt, hängt der weitere Verlauf der Abarbeitung der \code{payout} Methode vom Zeitpunkt des Methodenaufrufs ab. Smart Contracts können laut einer Konvention\footnote{Dies ist Effizienzgründen geschuldet. Blockheader sind in Ethereum mindestens 500 Byte groß, mit einer Blockzeit von 12 Sekunden wächst die Blockheaderkette somit täglich um 3,6 Megabyte. Der Zuwachs beträgt jährlich somit über 1 Gigabyte an Daten. Ein Ethereum Client der nicht die gesamte Blockheaderkette speichert, könnte somit nicht die Ausführung von Smart Contracts validieren, da ihm dazu die Daten aus der Vergangenheit fehlen.} bei ihrer Ausführung nur auf die Werte der 256 letzten Blockheader zugreifen\footnote{\url{http://solidity.readthedocs.io/en/develop/units-and-global-variables.html}}. Ist der in Zeile 4 angefragte \code{payoutBlockHash} älter als 256 Blocks, gibt \code{block.blockhash(<number>)} den Wert 0 zurück und Fall 1 tritt ein.
+Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die aktuelle Blocknummer bereits größer als die Blocknummer des Blocks für die Gewinnerauswahl ist. Sind diese Bedingungen erfüllt, hängt der weitere Verlauf der Abarbeitung der \code{payout} Methode vom Zeitpunkt des Methodenaufrufs ab. Smart Contracts können laut einer Konvention bei ihrer Ausführung nur auf die Werte der 256 letzten Blockheader zugreifen\footnote{\url{http://solidity.readthedocs.io/en/develop/units-and-global-variables.html}}. Ist der in Zeile 4 angefragte \code{payoutBlockHash} älter als 256 Blocks, gibt \code{block.blockhash(<number>)} den Wert 0 zurück und Fall 1 tritt ein.
 \begin{enumerate}
 \item Fall: Der Aufruf der \code{payout} Methode findet zu spät statt. Es findet keine Auszahlung statt, da der Smart Contract nicht auf den entscheidenden Blockhash zugreifen kann. Der Smart Contract erhöht die \code{nbrOfMissedPayouts} Variable um eins. Dies führt dazu, dass Betrag des Topfs in den nächsten Topf verschoben wird. 
-\item Fall: Der Aufruf der \code{payout} Methode findet rechtzeitig statt. Der Smart Contract berechnet in Zeile 8 den Gewinner indem er den Blockhash in einen Integer konvertiert und diese sehr hohe Zahl modulo der Anzahl Teilnehmer rechnet. Anschließend wird der korrekte Auszahlungsbetrag berechnet und in Zeile 12 an die Auszahlungsadresse des Gewinners versandt.
+\item Fall: Der Aufruf der \code{payout} Methode findet rechtzeitig statt. Der Smart Contract berechnet in Zeile 8 den Gewinner indem er den Blockhash zu einem Integer castet und diese sehr hohe Zahl modulo der Anzahl Teilnehmer rechnet. Anschließend wird der korrekte Auszahlungsbetrag berechnet und in Zeile 12 an die Auszahlungsadresse des Gewinners versandt.
 \end{enumerate}
 Zum Schluss wird der Topf wieder geöffnet und die Anzahl der teilnehmenden Spieler auf 0 gesetzt.
 
@@ -44,14 +44,18 @@ Da zur Bereitstellung des Smart Contracts auch die entsprechende Transaktionsgeb
 \begin{lstlisting}[basicstyle=\small]
 web3j wallet create
 \end{lstlisting}
-Über die Kommandozeile muss der Benutzer den gewünschten Wallet-Dateinamen  und ein Passwort angeben. In diesem Beispiel wird der Dateiname \textit{ethereum.json} und das Passwort \textit{changeit} verwendet. Anschließen wird die Wallet generiert und die Ethereum Account Adresse ausgegeben. Diese ist in diesem Beispiel die Adresse  \code{0x2201f3919589b519135ce977cc0906c9481069b2}.
+Über die Kommandozeile muss der Benutzer den gewünschten Wallet-Dateinamen  und ein Passwort angeben. In diesem Beispiel wird der Dateiname \textit{ethereum.json} und das Passwort \textit{changeit} verwendet. Anschließen wird die Wallet generiert und die Ethereum Account Adresse ausgegeben.
 Bevor der Smart Contract durch eine Transaktion veröffentlicht wird, muss zunächst eins der Ethereum Netzwerke gewählt werden. Bei Ethereum gibt es die folgende Netzwerke zur Auswahl:
 \begin{enumerate}
 \item Mainnet: Genau wie bei Bitcoin handelt es sich bei diesem Netzwerk um das Produktionsnetzwerk. 
 \item Ropsten Testnetz: Hierbei handelt es sich um ein Testnetz, das Proof-of-Work als Konsensalgorithmus verwendet. Es ist dem Ethereum Mainnet am ähnlichsten. Der auf diesem Netzwerk ausgetauschten Ether-Währung wird allerdings kein finanzieller Wert zugemessen.
 \item Rinkeby Testnetz: Hierbei handelt es sich um ein Testnetz, das nicht Proof-of-Work, sondern das Clique-Proof-of-Authority Protokoll als Konsens-Algorithmus verwendet. Im Gegensatz zu Proof-of-Work wird ein Konsens durch das Signieren von Blöcken durch bekannte Teilnehmer gewährleistet. Das Ethereum Improvement Proposal \cite{eip_rinkeby} beschreibt den verwendeten Vorgang detailliert.
 \end{enumerate}
-Das Problem bei der Verwendung des Proof-of-Work Algorithmus auf einem Testnetz ist, dass Miner für ihren Stromverbrauch nur in der wertlosen Testnetz-Währung bezahlt werden. Daraus resultiert, dass solch ein Testnetz nur eine sehr geringe Hashrate aufweist. Ein Angreifer der eine signifikante Hashrate besitzt kann beispielsweise nur noch Blöcke erzeugen, die keine Transaktionen beinhalten und dadurch das Testnetz für eine gewisse Zeit lahmlegen. Das Rinkeby Testnetz ist gegen solche Angriffe resistenter und daher im allgemeinen das stabilere Testnetzwerk. Um Ether auf dem Rinkeby Testnetz zu erhalten, verwendet man eine sogenannte Faucete\footnote{\url{https://faucet.rinkeby.io/}}, die in regelmäßigen Abständen Ether an eine beliebige Adresse versendet. Nachdem die Wallet über Ether verfügt kann man mit Hilfe von Web3J den geschriebenen Smart Contract bereitstellen. Abbildung \ref{fig:eth_web3j} listet die dazu verwendeten Klassen und die generierte \code{TrustlessGambling} Klasse auf.
+Das Problem bei der Verwendung des Proof-of-Work Algorithmus auf einem Testnetz ist, dass Miner für ihren Stromverbrauch nur in der wertlosen Testnetz-Währung bezahlt werden. Daraus resultiert, dass solch ein Testnetz nur eine sehr geringe Hashrate aufweist. Ein Angreifer der eine signifikante Hashrate besitzt, kann alle neuen gültigen Blöcke des restlichen Netzwerks verwerfen und selber die längste Blockkette erzeugen. Erzeugt der Angreifer dabei nur noch Blöcke, die keine Transaktionen beinhalten, kann er dadurch das Testnetz für eine gewisse Zeit lahmlegen. Das Rinkeby Testnetz ist gegen solche Angriffe resistenter und daher im allgemeinen das stabilere Testnetzwerk. 
+
+Um Ether auf dem Rinkeby Testnetz zu erhalten, verwendet man eine sogenannte Faucete\footnote{\url{https://faucet.rinkeby.io/}}. Dabei handelt es sich um eine Webseite der Testnetzbetreiber, die in regelmäßigen Abständen Kleinstbeträge an Ether verschenkt. Über die Eingabe seiner Ethereum Account Adresse kann man auf diese Weise in den Besitz von Währungseinheiten kommen.
+
+Nachdem die vorher erzeugte Wallet über Ether verfügt kann man mit Hilfe von Web3J den geschriebenen Smart Contract bereitstellen. Abbildung \ref{fig:eth_web3j} listet die dazu verwendeten Klassen und die generierte \code{TrustlessGambling} Klasse auf.
 
 \begin{figure}[H]
 \centering
@@ -148,7 +152,7 @@ Durch die letzte Einzahlung wechselt der Smart Contract in den Status \code{clos
 \item Zeile 43: Der zur Gewinnerauswahl benötigte Block wurde gefunden und die \code{payout} Methode kann aufgerufen werden. In diesem Fall wird dem Benutzer angezeigt, wie viel Zeit er noch für den Aufruf der \code{payout} Methode hat. 
 \item Zeile 46: Der zur Gewinnerauswahl benötigte Block wurde zwar gefunden, es sind allerdings bereits mehr als 256 Blöcke zwischen der letzten Einzahlung und dem aktuellen Zeitpunkt vergangen. Der Smart Contract wird bei dem Aufruf der \code{payout} Methode nicht auf den Blockhash für die Gewinnerauswahl zugreifen können. Der Gewinn wird zum nächsten Topf hinzufügen.
 \end{enumerate}
-Durch den Aufruf der \code{payout} Methode wird das Datenfeld, das die Anzahl der aktuellen Teilnehmer des Smart Contracts speichert, auf den Wert Null gesetzt. Dies hat zur Folge, dass beim erneuten Aufruf der \code{refresh} Methode des \code{CurrenPot ExpieryCacheValue} der Code von Zeile 13 bis 27 ausgeführt wird. Diese Codezeilen laden den Gewinner und den \code{payoutBlockHash} aus den Daten des Smart Contracts. Hat der \code{payoutBlockHash} den Wert Null, wurde die \code{payout} Methode zu spät aufgerufen. Nur in diesem Fall gibt es keinen Gewinner. Anschließend wird der aktuelle Topf zur Liste der abgearbeiteten Töpfe hinzugefügt und ein neuer Topf durch den Aufruf der \code{createEmptyPot} Methode erzeugt.
+Durch den Aufruf der \code{payout} Methode wird das Datenfeld, das die Anzahl der aktuellen Teilnehmer des Smart Contracts speichert, auf den Wert Null gesetzt. Da der lokal gespeicherte Topf aber noch alle Teilnehmer enthält, hat dies zur Folge, dass beim erneuten Aufruf der \code{refresh} Methode des \code{CurrenPot ExpieryCacheValue} die Bedingung aus Zeile 6 verletzt ist und der Code von Zeile 13 bis 27 ausgeführt wird. Diese Codezeilen laden den Gewinner und den \code{payoutBlockHash} aus den Daten des Smart Contracts. Hat der \code{payoutBlockHash} den Wert Null, wurde die \code{payout} Methode zu spät aufgerufen. Nur in diesem Fall gibt es keinen Gewinner. Anschließend wird der aktuelle Topf zur Liste der abgearbeiteten Töpfe hinzugefügt und ein neuer Topf durch den Aufruf der \code{createEmptyPot} Methode erzeugt.
 
 \subsection{Grafische Benutzeroberfläche}
 
@@ -175,15 +179,26 @@ Folgende Daten sind in dem QR Code enthalten:\\ ''ethereum:0x9b04da87b9bedafaee8
 
 Nachdem der Nutzer diese wie in Abbildung \ref{fig:ETH_wallet} eingegeben hat, kann er über eine Dropdown-Liste die gewünschte Funktion des Smart Contracts aufrufen.
 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.85]{Figures/eth_gui/ETH_wallet_contract_functions}
+\decoRule
+\caption{Liste aller Smart Contract Funktionen}
+\label{fig:ETH_wallet_contract_functions}
+\end{figure}
+
+Abbildung \ref{fig:ETH_wallet_expected_amount} zeigt den Aufruf der Funktion auf, die zurückgibt, welchen Geldbetrag der Smart Contract vom Spieler erwartet.
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.85]{Figures/eth_gui/ETH_wallet_expected_amount}
 \decoRule
-\caption{Aufruf der \code{EXPECTED POT AMOUNT} Funktion}
+\caption{Aufruf der \code{EXPECTED\_POT\_AMOUNT} Funktion}
 \label{fig:ETH_wallet_expected_amount}
 \end{figure}
 
-Abbildung \ref{fig:ETH_wallet_expected_amount} zeigt den Aufruf der Funktion auf, die zurückgibt, welchen Geldbetrag der Smart Contract vom Spieler erwartet. Da es sich lediglich um einen lesenden Zugriff handelt, wird keine Transaktion ans Netzwerk gesendet, beziehungsweise in die Blockchain geschrieben. Es fallen somit keine Transaktionskosten an.
+Da es sich lediglich um einen lesenden Zugriff handelt, wird keine Transaktion ans Netzwerk gesendet, beziehungsweise in die Blockchain geschrieben. Es fallen somit keine Transaktionskosten an.
 
 \begin{figure}[H]
 \centering

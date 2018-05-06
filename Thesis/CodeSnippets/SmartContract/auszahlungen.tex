@@ -6,7 +6,7 @@ function payout() public{
     if(payoutBlockHash == 0){
         nbrOfMissedPayouts++;
     }else{
-        winner = uint(payoutBlockHash) % NBR_OF_SLOTS;
+        winner = uint256(payoutBlockHash) % NBR_OF_SLOTS;
         address winnerAddress = payoutAddresses[winner];
         uint amount= EXPECTED_POT_AMOUNT*NBR_OF_SLOTS;
         amount += EXPECTED_POT_AMOUNT*NBR_OF_SLOTS*nbrOfMissedPayouts;
