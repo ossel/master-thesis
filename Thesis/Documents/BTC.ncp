@@ -8,7 +8,7 @@
         <Name>Pot</Name>
         <Access>Public</Access>
         <Location left="84" top="95" />
-        <Size width="208" height="264" />
+        <Size width="208" height="281" />
         <Collapsed>False</Collapsed>
         <Member type="Field">int nbrOfParticipants</Member>
         <Member type="Field">Date closingTime</Member>
@@ -17,6 +17,7 @@
         <Member type="Field">int payoutHeight</Member>
         <Member type="Field">String payoutHash</Member>
         <Member type="Field">int winnerIndex</Member>
+        <Member type="Field">boolean payoutStarted</Member>
         <Member type="Field">String payoutTxnId</Member>
         <Member type="Field">Exception payoutError</Member>
         <Member type="Method">public List&lt;Participant&gt; getParticipants()</Member>
@@ -41,6 +42,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -213,6 +216,8 @@
     </Entities>
     <Relationships>
       <Relationship type="Association" first="7" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -227,6 +232,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -237,6 +244,8 @@
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -275,8 +284,6 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="16">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">

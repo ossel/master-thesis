@@ -12,7 +12,7 @@ Genau wie bei Bitcoin besteht die Möglichkeit die Glücksspielanwendung entwede
 Möchte man eine Anwendung direkt in das Ethereum Netzwerk integrieren, bietet sich in Java die Bibliothek EthereumJ \cite{ethereumj} an. 
 
 \subsection{Smart Contract}
-Die folgenden Codestücke beschreiben den \code{TrustlessGambling} Smart Contract in der Programmiersprache Solidity\footnote{\url{https://solidity.readthedocs.io/en/v0.4.0/}}.
+Die folgenden Codestücke beschreiben den \code{TrustlessGambling} Smart Contract in der Programmiersprache Solidity. Dokumentation zur Solidity Programmiersprache findet man unter \cite{doc_solidity}.
 
 \subsubsection{Datenmodell}
 Das folgenden Codestücke zeigt den Rahmen, alle Variablen und den Konstruktor des Smart Contracts.
@@ -27,7 +27,7 @@ Nutzt der Spieler die Methode aus Zeile 1, wir als Auszahlungsadresse einfach di
 \subsubsection{Auszahlungen}\label{sssec:eth_nbrOfMissedPayouts}
 Auszahlungen finden durch den Aufruf der \code{payout} Methoden statt. Diese ist nicht mit dem Schlüsselwort \code{payable} markiert und erwartet keinen Ether-Betrag beim Aufruf.
 \input{CodeSnippets/SmartContract/auszahlungen.tex}
-Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die aktuelle Blocknummer bereits größer als die Blocknummer des Blocks für die Gewinnerauswahl ist. Sind diese Bedingungen erfüllt, hängt der weitere Verlauf der Abarbeitung der \code{payout} Methode vom Zeitpunkt des Methodenaufrufs ab. Smart Contracts können laut einer Konvention bei ihrer Ausführung nur auf die Werte der 256 letzten Blockheader zugreifen\footnote{\url{http://solidity.readthedocs.io/en/develop/units-and-global-variables.html}}. Ist der in Zeile 4 angefragte \code{payoutBlockHash} älter als 256 Blocks, gibt \code{block.blockhash(<number>)} den Wert 0 zurück und Fall 1 tritt ein.
+Die Methode kann nur aufgerufen werden, falls der Topf geschlossen ist und die aktuelle Blocknummer bereits größer als die Blocknummer des Blocks für die Gewinnerauswahl ist. Sind diese Bedingungen erfüllt, hängt der weitere Verlauf der Abarbeitung der \code{payout} Methode vom Zeitpunkt des Methodenaufrufs ab. Smart Contracts können laut einer Konvention bei ihrer Ausführung nur auf die Werte der 256 letzten Blockheader zugreifen (siehe \cite{doc_solidity_global_var}). Ist der in Zeile 4 angefragte \code{payoutBlockHash} älter als 256 Blocks, gibt \code{block.blockhash(<number>)} den Wert 0 zurück und Fall 1 tritt ein.
 \begin{enumerate}
 \item Fall: Der Aufruf der \code{payout} Methode findet zu spät statt. Es findet keine Auszahlung statt, da der Smart Contract nicht auf den entscheidenden Blockhash zugreifen kann. Der Smart Contract erhöht die \code{nbrOfMissedPayouts} Variable um eins. Dies führt dazu, dass Betrag des Topfs in den nächsten Topf verschoben wird. 
 \item Fall: Der Aufruf der \code{payout} Methode findet rechtzeitig statt. Der Smart Contract berechnet in Zeile 8 den Gewinner indem er den Blockhash zu einem Integer castet und diese sehr hohe Zahl modulo der Anzahl Teilnehmer rechnet. Anschließend wird der korrekte Auszahlungsbetrag berechnet und in Zeile 12 an die Auszahlungsadresse des Gewinners versandt.
@@ -36,7 +36,7 @@ Zum Schluss wird der Topf wieder geöffnet und die Anzahl der teilnehmenden Spie
 
 \subsection{Smart Contract Bereitstellung}
 Nachdem man den Smart Contract programmiert hat, muss man ihn zu Bytecode kompilieren und anschließen in einer Transaktion an das Ethereum Netzwerk senden. Der in Solidity geschriebene Smart Contract Code kann mithilfe eines Online Compilers \footnote{\url{https://ethereum.github.io/browser-solidity}} kompiliert werden. Das Kompilieren erzeugt die Dateien {TrustlessGambling.bin} und {TrustlessGambling.abi}. Diese enthalten den Bytecode und das Smart Contract \textbf{A}pplication \textbf{B}inary \textbf{I}nterface.
-Um in der Programmiersprache Java mit dem Smart Contract interagieren zu können stellt Web3J sogenannte Comandline Tools\footnote{\url{https://docs.web3j.io/command_line.html}} zur Verfügung. Durch den Aufruf des folgenden Befehl wird die Klasse \code{TrustlessGambling.java} erzeugt. 
+Um in der Programmiersprache Java mit dem Smart Contract interagieren zu können stellt Web3J sogenannte Comandline Tools zur Verfügung. Durch den Aufruf des folgenden Befehl wird die Klasse \code{TrustlessGambling.java} erzeugt.
 \begin{lstlisting}[basicstyle=\small]
 web3j solidity generate TrustlessGambling.bin TrustlessGambling.abi -o /path/to/src/main/java -p com.ossel.gamble.ethereum.generated
 \end{lstlisting}
@@ -44,7 +44,7 @@ Da zur Bereitstellung des Smart Contracts auch die entsprechende Transaktionsgeb
 \begin{lstlisting}[basicstyle=\small]
 web3j wallet create
 \end{lstlisting}
-Über die Kommandozeile muss der Benutzer den gewünschten Wallet-Dateinamen  und ein Passwort angeben. In diesem Beispiel wird der Dateiname \textit{ethereum.json} und das Passwort \textit{changeit} verwendet. Anschließen wird die Wallet generiert und die Ethereum Account Adresse ausgegeben.
+Über die Kommandozeile muss der Benutzer den gewünschten Wallet-Dateinamen  und ein Passwort angeben. In diesem Beispiel wird der Dateiname \textit{ethereum.json} und das Passwort \textit{changeit} verwendet. Anschließen wird die Wallet generiert und die Ethereum Account Adresse ausgegeben. Eine genaue Beschreibung der Web3j Commandline Tool Befehle findet man unter \cite{web3j_clt}.
 Bevor der Smart Contract durch eine Transaktion veröffentlicht wird, muss zunächst eins der Ethereum Netzwerke gewählt werden. Bei Ethereum gibt es die folgende Netzwerke zur Auswahl:
 \begin{enumerate}
 \item Mainnet: Genau wie bei Bitcoin handelt es sich bei diesem Netzwerk um das Produktionsnetzwerk. 

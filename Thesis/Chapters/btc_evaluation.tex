@@ -86,13 +86,9 @@ result[9] = 100284
 \captionof{figure}{Verteilung der SHA256 Hashfunktion}
 \label{fig:verteilung_sha256}
 \end{minipage}
-\todo{Bild sha-256 durch SHA256 ersetzen.}
-%Somit ist das Spiel nur unter der Annahme fair, dass die Zahl zur Gewinnerauswahl gleichverteilt ist.
-\\
-\subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
-Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass seine Bitcoin Einzahlung eingegangen ist. Der Nachteil ist, dass dadurch die Größe der Auszahlungstransaktion steigt und somit eine höhere Transaktionsgebühr gezahlt werden muss. Im folgenden wird die Auszahlungstransaktion des Beispiels aus \ref{ssec:btc_gui} betrachtet.
 
-\todo{ Dies hätte den Nachteil, dass man nicht weiß von welchem Spieler welche Einzahlungstransaktion ist. Die Anwendung könnte dem Spieler somit kein Benachrichtigung anzeigen sobald er an einem Topf teilnimmt.}
+\subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
+Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass seine Bitcoin Einzahlung eingegangen ist. Die folgenden Abbildungen betrachten die Auszahlungstransaktion des Beispiels aus Abschnitt \ref{ssec:btc_gui} betrachtet.
 
 \begin{figure}[H]
 \centering
@@ -125,11 +121,11 @@ Abbildung \ref{fig:btc_txn_input_output} zeigt welche Inputs und Outputs für di
 \label{fig:btc_txn_input_output_scripts}
 \end{figure}
 
-Da die Anwendung für jeden Benutzer eine eigene Adresse generiert, muss die Anwendung in der Auszahlungstransaktion für jede Input Adresse eine gültige Signatur angeben. Abbildung \ref{fig:btc_txn_input_output_scripts} zeigt, dass die Transaktion dadurch wesentlich größer wird. Hier könnte in Zukunft die Verwendung sogenannter Schnorr Multi-Signaturen \cite{schnorr_sig} aushelfen. Durch diese lassen sich alle Signaturen der Inputs durch eine einzige Signatur ersetzen.
+Die Anwendung muss in der Auszahlungstransaktion für jede Input Adresse eine gültige Signatur angeben, obwohl alle Adressen von der gleichen Wallet kontrolliert werden. Hier könnte in Zukunft die Verwendung sogenannter Schnorr Multi-Signaturen \cite{schnorr_sig} aushelfen. Durch diese lassen sich alle Signaturen der Inputs durch eine einzige Signatur ersetzen.
 
 \subsection{Blockchain Mining Varianz}
 Der Begriff Blockchain Mining Varianz beschreibt den Umstand, dass die Miner des Netzwerkes entweder Glück oder Pech bei der Suche nach dem nächsten gültigen Blockhash haben können. Bei Bitcoin gibt es daher nicht genau alle 10 Minuten einen neuen Block, sonder durchschnittlich alle 10 Minuten. Für die Glücksspielanwendung bedeutet dies, dass die Zeit zwischen der letzten Einzahlung und der Auswahl des Gewinners variieren kann. In der Praxis kommt es vor, dass man 30 Minuten und mehr auf den nächsten Block warten muss. Dies ist für den Spieler eine recht lange Zeit. Das Proposal \cite{bobtail} liefert ein Verfahren, das die Blockchain Mining Varianz stark verringert. Dieser Vorschlag ist bisher allerdings noch nicht in den Bitcoin Sourcecode eingeflossen.
-Eine andere Möglichkeit die Wartezeit für den Spieler zu verringern ist es eine  Kryptowährung mit einer geringeren Blockzeit zu verwenden. Beispiele hierfür sind LiteCoin\footnote{\url{https://litecoin.com/}} mit einer Blockzeit von 2,5 Minuten, die auf Privatsphäre spezialisierte Währung Monero\footnote{\url{https://getmonero.org/}} mit einer Blockzeit von 2 Minuten und Ethereum\footnote{\url{https://www.ethereum.org/}} mit einer Blockzeit von 12 Sekunden. Bei einer geringen Blockzeit kommt es häufiger zu sogenannten Blockchain Forks. \todo{alle cryptowährungs urls aus den fussnoten ins quellenverzeichnis. rest des dokuments prüfen!}
+Eine andere Möglichkeit die Wartezeit für den Spieler zu verringern ist es eine  Kryptowährung mit einer geringeren Blockzeit zu verwenden. Beispiele hierfür sind LiteCoin mit einer Blockzeit von 2,5 Minuten, die auf Privatsphäre spezialisierte Währung Monero mit einer Blockzeit von 2 Minuten und Ethereum mit einer Blockzeit von 12 Sekunden. Bei einer geringen Blockzeit kommt es häufiger zu sogenannten Blockchain Forks. Weitere Informationen zu den genannten Kryptowährungen sind unter \cite{coin_ltc}, \cite{coin_xmr} und \cite{coin_eth} verfügbar.
 
 \subsection{Blockchain Forks} \label{sssec:btc_fork}
 Blockchain Forks entstehen, falls zwei Miner unabhängig voneinander mehr oder weniger gleichzeitig einen validen Block finden. Beide Miner broadcasten ihren Block schnellstmöglich an die Teilnehmer des Peer-to-Peer Netzwerks. Aufgrund von Netzwerkverzögerungen kommt es nun dazu, dass ein Teil des Netzwerks Block 1 und der restliche Teil des Netzwerks Block 2 zuerst enthält. Beide Blockchain-Ketten sind nun gleich lang.
