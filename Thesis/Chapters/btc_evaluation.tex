@@ -86,64 +86,27 @@ result[9] = 100284
 Dieser Abschnitt untersucht ab welchem Einsatzbetrag es für einen Miner profitabel ist, einen gültigen Blockhash zu verwerfen, um den Ausgang des Glücksspiel zu beeinflussen.
 
 Betrachten wir dazu das Bitcoin Netzwerk Anfang Februar 2018. Der Preis pro Bitcoin beträgt 8000 Euro. Der Mining Reward liegt bei 12,5 Bitcoin pro Block\footnote{Dieses Beispiel vernachlässigt die durch das Minen des Blocks erhaltenen Transaktionsgebühren.}. Für das Lösen eines gültigen Blocks erhält ein Miner somit 100000 Euro.
-Angenommen ein Miner besitzt eine Hashrate $h$, nimmt an einem Glücksspieltopf mit $n\in\{2, 5, 10\}$ Personen und einem Einsatz von $E$ teil. Mit einer Wahrscheinlichkeit von $h$ findet der Miner den Block für die Gewinnerauswahl und kann entscheiden, ob er den Block veröffentlicht oder verwirft. Mit einer Wahrscheinlichkeit von $1-h$ findet ein anderer Miner des Bitcoin Netzwerks den Block für die Gewinnerauswahl und der Miner kann den Ausgang des Spiels nicht beeinflussen.
-
-Für diese Betrachtung muss der Erwartungswert für beide folgenden Szenario berechnet werden:
+Angenommen ein Miner besitzt eine Hashrate $h$, nimmt an einem Glücksspieltopf mit $n\in\{2, 5, 10\}$ Personen und einem Einsatz von $E$ teil. 
+Sollte ein anderer Miner des Bitcoin Netzwerks den Block für die Gewinnerauswahl finden, kann der Miner den Ausgang des Spiels nicht beeinflussen. Ausschließlich wenn der Miner einen gültigen Block vor dem Rest des Netzwerks findet und durch diesen das Spiel verliert, macht es für ihn Sinn, einen Manipulationsversuch in Betracht zu ziehen. Um eine Aussage über die Profitabilität machen zu können, muss der Erwartungswert für beide folgenden Szenarien berechnet werden:
 
 \subsubsection{Szenario 1} 
-Der Miner findet einen gültigen Block, durch den er das Glücksspiel verliert. Er akzeptiert sein Schicksal und es kommt zu keinem Manipulationsversuch. Der Erwartungswert beträgt $100000 - E$ Euro.
+Der Miner akzeptiert sein Schicksal und veröffentlicht den Block. Es kommt zu keinem Manipulationsversuch. Der Erwartungswert beträgt $100000 - E$ Euro.
 \subsubsection{Szenario 2} 
-Der Miner findet einen gültigen Block, durch den er das Glücksspiel verliert. Er verwirft diesen Block und versucht sein Glück erneut um den Ausgang des Glücksspiels zu seinen Gunsten ändern zu können. Da es sich beim Mining um einen gedächtnislosen Prozess handelt, hat der Miner ab diesem Moment erneut eine Wahrscheinlichkeit von $h$ einen gültigen Block zu finden. Für die Berechnung des Erwartungswerts müssen die folgenden Ausgänge berücksichtigt werden:\\
+Der Miner verwirft Block und versucht sein Glück erneut, um den Ausgang des Spiels zu seinen Gunsten ändern zu können. Da es sich beim Mining um einen gedächtnislosen Prozess handelt, hat der Miner ab diesem Moment erneut eine Wahrscheinlichkeit von $h$ einen gültigen Block zu finden. Für die Berechnung des Erwartungswerts müssen die folgenden Ausgänge berücksichtigt werden:\\
 \textbf{1. Fall:} Der Miner findet einen weiteren Block, der das Spiel zu seinen Gunsten entscheidet. Dieser Fall tritt mit einer Wahrscheinlichkeit von $h*\frac{1}{n}$ ein. Der Miner erhält den Blockreward und den Einsatz der Mitspieler: $100000 + (n-1)*E$ Euro.\\
-\textbf{2. Fall:} Der Miner findet zwar einen weiteren Block, verliert durch diesen dennoch das Spiel. Dieser Fall tritt mit einer Wahrscheinlichkeit von $h*\frac{n-1}{n}$ ein. In diesem Fall entscheidet er sich den Block einzulösen um den Blockreward zu erhalten. Der Miner erhält somit $100000 - E$ Euro.\footnote{Der Miner könnte den Block erneut verwerfen und versuchen einen weiteren gültigen Block zu finden.}\\
+\textbf{2. Fall:} Der Miner findet zwar einen weiteren Block und verliert durch diesen erneut das Spiel. Dieser Fall tritt mit einer Wahrscheinlichkeit von $h*\frac{n-1}{n}$ ein. In diesem Fall entscheidet er sich den Block zu veröffentlichen um den Blockreward zu erhalten. Der Miner erhält somit $100000 - E$ Euro.\footnote{Der Miner könnte den Block erneut verwerfen und versuchen einen weiteren gültigen Block zu finden.}\\
 %Die Wahrscheinlichkeit 3 gültige Blöcke hintereinander zu finden beträgt selbst bei einer Hashrate von $h=0,25$ unter 2 Prozent.
 \textbf{3. Fall:} Ein anderer Miner findet den nächsten Block, der das Glücksspiel zu Gunsten des Miners entscheidet. Dieser Fall tritt mit einer Wahrscheinlichkeit von $(1-h)*\frac{1}{n}$ ein. Der Miner verliert den Blockreward, gewinnt allerdings das Spiel und erhält somit $(n-1)*E$ Euro.\\
 \textbf{4. Fall:} Ein anderer Miner findet den nächsten Block und ein anderer Teilnehmer gewinnt durch diesen das Spiel. Dieser Fall tritt mit einer Wahrscheinlichkeit von $(1-h)*\frac{n-1}{n}$ ein. Der Miner verliert den Blockreward und seinen Einsatz: $-E$ Euro.\\\\
-\vspace{0.5cm}
-Der Erwartungswert von Szenario 2 berechnet sich zu $ h*100000$ Euro.\footnote{Die Anzahl Teilnehmer des Spiels haben keine Auswirkung auf den Erwartungswert. Die Variable $n$ verschwindet beim Vereinfachen der Erwartungswertgleichung.}\\
-%\vspace{0.5cm}
-Setzt man die Erwartungswerte beider Szenarien gleich, ergibt sich folgende Gleichung: $100000 - E = h*100000$.\\Formt man diese nach $E$ um, ergibt sich: $E=- h*100000 +10000$.\\
-Diese Gleichung gibt an, wie hoch der Einsatz des Spiels sein muss, damit es für einen Miner mit Hashrate $h$ finanziell Sinn macht, das Spiel durch das zurückzuhalten eines gültigen Blocks zu manipulieren.
+Der Erwartungswert von Szenario 2 berechnet sich durch:\\
+$h*\frac{1}{n}*(100000 + (n-1)*E) + h*\frac{n-1}{n}*(100000 - E) + (1-h)*\frac{1}{n}*(n-1)*E + (1-h)*\frac{n-1}{n}* (-E)$\\
+Durch Vereinfachen ergibt sich ein Erwartungswert von $ h*100000$ Euro.\footnote{Die Anzahl Teilnehmer des Spiels haben keine Auswirkung auf den Erwartungswert. Die Variable $n$ verschwindet beim Vereinfachen der Erwartungswertgleichung.}\\\\
+Setzt man die Erwartungswerte beider Szenarien gleich, ergibt sich folgende Gleichung: $100000 - E = h*100000$.\\Formt man diese nach $E$ um, ergibt sich: $E = 100000 * (1-h)$.\\
+Diese Gleichung gibt an, wie hoch der Einsatz des Spiels sein muss, damit es für einen Miner mit Hashrate $h$ finanziell Sinn macht, das Spiel durch zurückhalten eines gültigen Blocks zu manipulieren.\\\\
+Der folgende Abschnitt betrachtet in welche Größenordnung $h$ in der Praxis zu erwarten ist.
+Die gesamte Hashrate des Bitcoin Netzwerks beträgt zurzeit circa 30000000 Tera-Hash pro Sekunde (TH/s) \cite{blockchain_info_hashrate}. Einer der profitabelsten Bitcoin ASICs ist der Antminer S9 der Firma Bitmain\footnote{\url{https://www.bitmain.com/}}. Dieser kostet im Einkauf 900 Euro und liefert eine Rechenleistung von 14 TH/s. Ein Miner der ein zwanzigstel ($h=0,05$) der Rechenleistung des Bitcoin Netzwerks besitzt, benötigt umgerechnet über 100000 Antminer S9. Somit betragen alleine die Anschaffungskosten der Mining Hardware 90 Millionen Euro.
 
-\begin{table}[H]
-\centering
-\caption{Profitabilitätsgrenze eines Manipulationsversuchs}
-\label{tab:btc_mining_attack}
-\begin{tabular}{|c|c|}
-\hline
-Hashrate (h) & Einsatz (E) \\ \hline
-0,05                     & 95000       \\ \hline
-0,1                      & 90000       \\ \hline
-0,15                     & 85000       \\ \hline
-0,2                      & 80000       \\ \hline
-0,25                     & 75000       \\ \hline
-0,3                      & 70000       \\ \hline
-0,35                     & 65000       \\ \hline
-0,4                      & 60000       \\ \hline
-0,45                     & 55000       \\ \hline
-0,5                      & 50000       \\ \hline
-\end{tabular}
-\end{table}
-
-Aus Tabelle \ref{tab:btc_mining_attack} geht hervor, dass es selbst für einen Miner, der die Hälfte der Hashrate des Bitcoin Netzwerkes kontrolliert, nur profitabel ist gültige Blöcke zu verwerfen, falls der Einsatz des Spiels über 50000 Euro beträgt.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=1\linewidth]{Figures/hE}
-\decoRule
-\caption{}
-\label{fig:eH}
-\end{figure}
-
-
-%Die Berechnung des Erwartungswerts gibt eine Aussage ab welchem Einsatz es sich für den Miner lohnt einen gültigen Block zu verwerfen um den Ausgang des Spiels zu manipulieren. Sei $E$ der Einsatz des Topfes. 
-
-%Da der Miner eine Hashrate von 20 Prozent hat, liegt die Wahrscheinlichkeit das der Miner den nächsten Block findet bei 0,2. Falls er den gefundene Blockhash verwirft, da er durch diesen seinen Glücksspieleinsatz verlieren würde, muss er es schaffen vor einem anderen Miner einen weiteren Blockhash zu berechnen. Ansonsten verliert er den Blockreward. Die Wahrscheinlichkeit das der Miner zwei gültige Blockhashs hintereinander findet, liegt bei 0,2 * 0,2 = 0,04 und ist somit verschwindend gering.
-
-
-Die Hashrate des Bitcoin Netzwerks beträgt circa 30000000 Tera-Hash pro Sekunde (TH/s) \cite{blockchain_info_hashrate}. Einer der profitabelsten Bitcoin ASICs ist der Antminer S9 der Firma Bitmain\footnote{\url{https://www.bitmain.com/}}. Dieser kostet im Einkauf 900 Euro und liefert eine Rechenleistung von 14 TH/s. Ein Miner der ein zwanzigstel($h=0,05$) der Rechenleistung des Bitcoin Netzwerks besitzt, benötigt umgerechnet über 100000 Antminer S9. Somit betragen alleine die Anschaffungskosten der Mining Hardware 90 Millionen Euro.
-
-Bei Proof-of-Work Kryptowährungen wie Bitcoin hat es sich durchgesetzt, dass Miner ihre Rechenleistung in Mining Pools bündeln und gemeinsam nach dem nächsten Block suchen. Findet der Pool einen gültigen Block, wird der Blockreward unter den Teilnehmern des Pools aufgeteilt.
+Bei Proof-of-Work Kryptowährungen wie Bitcoin hat es sich durchgesetzt, dass Miner ihre Rechenleistung in Mining Pools bündeln und gemeinsam nach dem nächsten Block suchen. Der Mining Pool stellt dabei eine zentrale Instanz dar, die den nächsten Block zusammenstellt und dessen Blockheader an alle Teilnehmer verteilt. Die Teilnehmer empfangen den Blockheader und beginnen mit der Suche nach einem gültigen Blockhash. Findet der Pool einen gültigen Block, wird der Blockreward unter den Teilnehmern des Pools aufgeteilt. Üblicherweise erhalten die Betreiber des Mining Pools einen Anteil von 1 bis 2 Prozent für die Bereitstellung ihres Services.
 
 \begin{figure}[H]
 \centering
@@ -153,7 +116,20 @@ Bei Proof-of-Work Kryptowährungen wie Bitcoin hat es sich durchgesetzt, dass Mi
 \label{fig:btc_mining_pools}
 \end{figure}
 
-Abbildung \ref{fig:btc_mining_pools} zeigt die Verteilung der Hashrate des Bitcoin Netzwerks basierend auf den Blöcken der 4 letzten Tage\footnote{Die Graphik wurde am 10.05.2018 auf Blockchain(dot)Info erstellt. Der Bitcoin Knoten von Blockchain(dot)Info ist mit den aufgelisteten Pools verbunden und schreib einen neuen Block dem Pool zu von dem Blockchain(dot)Info diesen als erstes empfangen hat. Die Statistik ist daher mit Vorsicht zu genießen.} Aus der Grafik geht hervor, dass der größte Pool circa 25\% der Hashrate des Bitcoin Netzwerks besitzt. Hierbei ist es wichtig hervorzuheben, dass sich die eigentliche Mining Hardware im Besitz von Privatpersonen befindet. Diese Privatpersonen können den Mining Pool wechseln, sollten sie nicht mit den Praktiken des Pools einverstanden sein. Ein Pool, der gültige Blöcke nicht an das Bitcoin Netzwerk weiterleiten, da er den Ausgang eines Glücksspiels bestimmen möchte, riskiert damit Marktanteile einzubüßen.
+Abbildung \ref{fig:btc_mining_pools} zeigt die Verteilung der Hashrate des Bitcoin Netzwerks basierend auf den Blöcken der 4 letzten Tage\footnote{Die Graphik wurde am 10.05.2018 auf Blockchain(dot)Info erstellt. Der Bitcoin Knoten von Blockchain(dot)Info ist mit den aufgelisteten Pools verbunden und schreibt einen neuen Block dem Pool zu von dem Blockchain(dot)Info diesen als erstes empfangen hat. Die Statistik ist daher mit Vorsicht zu genießen.} Aus der Grafik geht hervor, dass der größte Pool circa 25\% der Hashrate des Bitcoin Netzwerks besitzt. Hierbei ist es wichtig hervorzuheben, dass sich die eigentliche Mining Hardware im Besitz von Privatpersonen befindet. Diese Privatpersonen können den Mining Pool wechseln, sollten sie nicht mit den Praktiken des Pools einverstanden sein. Ein Pool, der gültige Blöcke nicht an das Bitcoin Netzwerk weiterleiten, da er den Ausgang eines Glücksspiels bestimmen möchte, riskiert damit Marktanteile einzubüßen.
+\newpage
+\noindent
+Die oben berechnete Formel $E = 100000 * (1-h)$ ergibt die in Abbildung \ref{fig:eH} gezeigte Gerade.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{Figures/hE}
+\decoRule
+\caption{}
+\label{fig:eH}
+\end{figure}
+
+Es geht hervor, dass ein Manipulationsversuch für einen Miner mit einem zwanzigstel der Hashrate ($h=0,05$), erst finanziell lohnenswert ist, falls der Einsatz des Spiels über 95000 Euro liegt. Würde der größte Bitcoin Mining Pool ($h=0,25$) einen Angriff starten, wären Töpfe bis zu einem Einsatz von 75000 Euro als sicher anzusehen. Selbst für einen Miner, der die Hälfte der Hashrate des Bitcoin Netzwerkes ($h=0,5$) kontrolliert, ist es nur profitabel gültige Blöcke zu verwerfen, falls der Einsatz des Spiels über 50000 Euro beträgt.
 
 \subsection{Auszahlungstransaktion} \label{sssec:Auszahlungstransaktion}
 Die Glücksspielanwendung erzeugt für jede Einzahlung eine eigene Einzahlungsadresse statt für jeden Benutzer die gleiche Adresse zu verwenden. Dies hat den Vorteil, dass die Anwendung dem Benutzer anzeigen kann, dass seine Bitcoin Einzahlung eingegangen ist. Die folgenden Abbildungen betrachten die Auszahlungstransaktion des Beispiels aus Abschnitt \ref{ssec:btc_gui} betrachtet.
